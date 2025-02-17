@@ -15,7 +15,6 @@ import { PptScreenComponent } from './ppt-screen/ppt-screen.component';
     SidebarComponent,
     LandingPageComponent,
     PptScreenComponent
-
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

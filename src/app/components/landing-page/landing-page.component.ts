@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-landing-page',
@@ -21,7 +22,8 @@ export class LandingPageComponent {
   constructor(private router: Router) {}
 
   createNewSlide() {
-    this.router.navigate(['/ppt-screen']);
+    const uniqueId = uuidv4(); 
+    this.router.navigate(['/ppt-screen', uniqueId]);
   }
 
   selectTemplate(template: any) {

@@ -6,6 +6,6 @@ export const routes: Routes = [
 
 
     { path: '', component: LandingPageComponent }, 
-    { path: 'ppt-screen', component: PptScreenComponent }
+    { path: 'ppt-screen/:id', component: PptScreenComponent }
 
 ];
