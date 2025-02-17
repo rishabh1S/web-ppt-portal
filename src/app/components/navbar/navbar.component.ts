@@ -12,6 +12,7 @@ import {
   lucideCircle,
   lucideChevronDown,
   lucideAlignJustify,
+  lucideShare2,
 } from '@ng-icons/lucide';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -36,6 +37,7 @@ import { SlideService } from '../../services/slide.service';
       image: lucideImage,
       plusCircle: lucideCircle,
       chevronDown: lucideChevronDown,
+      lucideShare: lucideShare2,
     }),
   ],
   templateUrl: './navbar.component.html',
