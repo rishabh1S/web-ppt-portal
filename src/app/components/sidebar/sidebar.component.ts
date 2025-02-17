@@ -5,19 +5,22 @@ import { lucideCirclePlus, lucideTrash } from '@ng-icons/lucide';
 import { Observable } from 'rxjs';
 import { Slide } from '../../model/Slide';
 import { SlideService } from '../../services/slide.service';
+import { SlideViewComponent } from '../slide-view/slide-view.component';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [NgIcon, CommonModule],
+  imports: [NgIcon, CommonModule, SlideViewComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
   viewProviders: [provideIcons({ lucideCirclePlus, lucideTrash })],
 })
 export class SidebarComponent {
   slides: Observable<Slide[]>;
+  selectedSlide$: Observable<Slide | null>;
 
   constructor(private slideService: SlideService) {
     this.slides = this.slideService.slides$;
+    this.selectedSlide$ = this.slideService.selectedSlide$;
   }
 
   addSlide(): void {

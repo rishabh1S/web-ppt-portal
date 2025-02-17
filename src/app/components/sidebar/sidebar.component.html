@@ -7,13 +7,21 @@
     </button>
 </div>
 <div class="flex-1 overflow-auto p-4 space-y-4 max-h-screen">
-    <div *ngFor="let slide of slides | async; let i = index"
-        class="relative aspect-video bg-background border rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-100"
-        (click)="selectSlide(slide)">
-        <button type="button" (click)="deleteSlide(slide.id); $event.stopPropagation()"
-            class="absolute top-2 right-2 text-red-500">
-            <ng-icon name="lucideTrash"></ng-icon>
-        </button>
-        Slide {{ i + 1 }}
-    </div>
+    <ng-container *ngIf="{ 
+        slides: slides | async, 
+        selectedSlide: selectedSlide$ | async 
+      } as data">
+        <div *ngFor="let slide of data.slides; let i = index"
+            class="relative aspect-video border rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-100"
+            [ngClass]="{
+  'border-purple-500 border-2': data.selectedSlide?.id === slide.id,
+  'border-gray-300': data.selectedSlide?.id !== slide.id
+}" (click)="selectSlide(slide)">
+            <button type="button" (click)="deleteSlide(slide.id); $event.stopPropagation()"
+                class="absolute top-2 right-2 text-red-500">
+                <ng-icon name="lucideTrash"></ng-icon>
+            </button>
+            <app-slide-view [slide]="slide" [isEditable]="false"></app-slide-view>
+        </div>
+    </ng-container>
 </div>
