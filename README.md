@@ -57,3 +57,19 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+We've to create a content creator with certain features:
+
+1. Ability to add standard PPT template/ layout slides, and update defined fields.
+2. Ability to fix the font family for pre-defined text fields.
+3. Ability to fix font size for pre-defined text fields.
+4. Ability to highlight text using text highlight colour.
+5. Ability to colour the text with font colour.
+6. Ability to resize the font in case text is copied from external sources.
+7. Features for alignment, bullets and numbering.
+8. Enabling line spacing options for formating paragraphs.
+9. Ability to insert shapes and edit text within shapes, color the shape, resize the shape, mark shape outline.
+10. Insert a table in pre-defined grid format (2X2), (3X3); Ability to resize the table and edit content within the table.
+11. Ability to upload image, resize image; Crop the image.
+
+We'll start building the UI for this in angular v19 and for styling we'll prefer tailwind css.
