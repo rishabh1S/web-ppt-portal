@@ -8,9 +8,8 @@ describe('MainscreenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MainscreenComponent]
-    })
-    .compileComponents();
+      imports: [MainscreenComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MainscreenComponent);
     component = fixture.componentInstance;

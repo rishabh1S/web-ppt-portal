@@ -1,6 +1,6 @@
 <nav class="flex items-center justify-between p-4 bg-background border-b">
     <div class="flex items-center space-x-4">
-        <ng-icon name="lucideAlignJustify" size="25"></ng-icon>
+        <ng-icon name="hamburger" size="25"></ng-icon>
         <input [(ngModel)]="title" type="text" placeholder="Presentation Title"
             class="bg-[#f9fbfd] p-2 w-64 rounded text-lg font-normal text-[#444746]" />
     </div>
@@ -17,6 +17,7 @@
         <button class="p-2 hover:bg-gray-200 rounded" title="Align Left">
             <ng-icon name="alignLeft" class="h-4 w-4"></ng-icon>
         </button>
+
         <div class="relative">
             <button class="border p-2 rounded inline-flex items-center" (click)="toggleDropdown()">
                 Insert

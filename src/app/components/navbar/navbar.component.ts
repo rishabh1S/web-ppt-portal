@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideSave,
@@ -15,6 +15,9 @@ import {
 } from '@ng-icons/lucide';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Slide } from '../../model/Slide';
+import { Subscription } from 'rxjs';
+import { SlideService } from '../../services/slide.service';
 
 @Component({
   selector: 'app-navbar',
@@ -22,7 +25,7 @@ import { CommonModule } from '@angular/common';
   imports: [NgIcon, FormsModule, CommonModule],
   providers: [
     provideIcons({
-      lucideAlignJustify: lucideAlignJustify,
+      hamburger: lucideAlignJustify,
       save: lucideSave,
       settings: lucideSettings,
       bold: lucideBold,
@@ -37,9 +40,17 @@ import { CommonModule } from '@angular/common';
   ],
   templateUrl: './navbar.component.html',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnDestroy {
   title: string = 'My App';
   isDropdownOpen = false;
+  selectedSlide: Slide | null = null;
+  subscription: Subscription;
+
+  constructor(private slideService: SlideService) {
+    this.subscription = this.slideService.selectedSlide$.subscribe(
+      (slide) => (this.selectedSlide = slide)
+    );
+  }
 
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
@@ -48,5 +59,9 @@ export class NavbarComponent {
   onInsert(type: string): void {
     console.log('Inserting:', type);
     this.isDropdownOpen = false;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
