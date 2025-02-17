@@ -1,8 +1,7 @@
-// src/app/sidebar/sidebar.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePlus, lucideTrash } from '@ng-icons/lucide';
+import { lucideCirclePlus, lucideTrash } from '@ng-icons/lucide';
 import { Observable } from 'rxjs';
 import { Slide } from '../../model/Slide';
 import { SlideService } from '../../services/slide.service';
@@ -12,7 +11,7 @@ import { SlideService } from '../../services/slide.service';
   imports: [NgIcon, CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
-  viewProviders: [provideIcons({ lucidePlus, lucideTrash })],
+  viewProviders: [provideIcons({ lucideCirclePlus, lucideTrash })],
 })
 export class SidebarComponent {
   slides: Observable<Slide[]>;

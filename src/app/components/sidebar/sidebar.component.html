@@ -1,13 +1,14 @@
-<div class="p-4 border-b">
+<div class="p-4">
     <button type="button"
-        class="w-full text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 mb-2"
+        class="w-full text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-xl text-sm px-5 py-2.5 flex justify-center space-x-2"
         (click)="addSlide()">
-        <ng-icon name="lucidePlus"></ng-icon> Add Slide
+        <ng-icon name="lucideCirclePlus" size="20"></ng-icon>
+        <div>Add Slide</div>
     </button>
 </div>
 <div class="flex-1 overflow-auto p-4 space-y-4 max-h-screen">
     <div *ngFor="let slide of slides | async; let i = index"
-        class="relative h-24 bg-background border rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-100"
+        class="relative aspect-video bg-background border rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-100"
         (click)="selectSlide(slide)">
         <button type="button" (click)="deleteSlide(slide.id); $event.stopPropagation()"
             class="absolute top-2 right-2 text-red-500">
