@@ -23,7 +23,7 @@ export class MainscreenComponent {
   // Call this whenever a bound field is updated
   updateSlide(): void {
     if (this.selectedSlide) {
-      this.slideService.updateSlide(this.selectedSlide);
+      this.slideService.updateSlide(this.selectedSlide);  
     }
   }
 }

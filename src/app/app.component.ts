@@ -3,6 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainscreenComponent } from './components/mainscreen/mainscreen.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { LandingPageComponent } from './components/landing-page/landing-page.component';
+import { PptScreenComponent } from './ppt-screen/ppt-screen.component';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +13,9 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     NavbarComponent,
     MainscreenComponent,
     SidebarComponent,
+    LandingPageComponent,
+    PptScreenComponent
+
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
