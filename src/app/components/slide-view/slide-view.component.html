@@ -1,0 +1,23 @@
+<ng-container [ngSwitch]="slide.template">
+    <div *ngSwitchCase="'title'" class="h-full">
+        <div *ngIf="isEditable; else titlePreview" class="flex flex-col space-y-4 h-full">
+            <quill-editor [(ngModel)]="slide.content.title" (ngModelChange)="onContentChange('title', $event)"
+                [modules]="quillModules" (onSelectionChanged)="onSelectionChanged($event)" placeholder="Title"
+                class="w-full bg-white p-2 rounded">
+            </quill-editor>
+            <quill-editor [(ngModel)]="slide.content.subtitle" (ngModelChange)="onContentChange('subtitle', $event)"
+                [modules]="quillModules" (onSelectionChanged)="onSelectionChanged($event)" placeholder="Subtitle"
+                class="w-full bg-white p-2 rounded">
+            </quill-editor>
+        </div>
+        <ng-template #titlePreview>
+            <div class="flex flex-col justify-center h-full">
+                <div [innerHTML]="slide.content.title"></div>
+                <div [innerHTML]="slide.content.subtitle"></div>
+            </div>
+        </ng-template>
+    </div>
+    <div *ngSwitchDefault class="flex items-center justify-center h-full">
+        <p class="text-gray-500">No preview available</p>
+    </div>
+</ng-container>

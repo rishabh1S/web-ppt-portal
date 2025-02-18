@@ -1,49 +1,53 @@
 <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-    <!-- Header -->
-    <h1 class="text-3xl font-semibold mb-6 text-gray-700">Welcome to Your Slides</h1>
-  
-    <!-- Action Buttons -->
-    <div class="flex space-x-6">
-      <!-- Create New Slide Button -->
-      <button
-        (click)="createNewSlide()"
-        class="flex items-center justify-center w-32 h-32 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-200"
-      >
-        <span class="text-6xl text-gray-500">+</span>
-      </button>
-      <!-- import ppt function -->
-      <label class="bg-green-500 text-white px-6 py-2 rounded-lg mt-4 cursor-pointer">
-        📂 Import PPT
-        <input type="file" (change)="importPPT($event)" accept=".ppt,.pptx" hidden>
-      </label>
-  
-      <!-- Choose a Template -->
-      <div class="flex flex-col">
-        <h2 class="text-lg text-gray-600 mb-2">Start with a template</h2>
-        <div class="flex space-x-4">
-          <div
-            *ngFor="let template of templates"
-            (click)="selectTemplate(template)"
-            class="w-32 h-32 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-200 cursor-pointer"
-          >
-            <img [src]="template.image" [alt]="template.name" class="w-full h-full object-cover rounded-lg" />
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Recent Slides (Optional) -->
-    <div *ngIf="recentSlides.length" class="mt-10">
-      <h2 class="text-lg text-gray-600 mb-2">Recent Slides</h2>
+  <h1 class="text-3xl font-semibold mb-6 text-gray-700">Welcome to Your Slides</h1>
+
+  <!-- Action Buttons -->
+  <div class="flex space-x-6">
+    <!-- Create New Slide Button -->
+    <button (click)="createNewSlide()"
+      class="flex items-center justify-center w-32 h-32 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-200">
+      <span class="text-6xl text-gray-500">+</span>
+    </button>
+    <!-- import ppt function -->
+    <label class="bg-green-500 text-white px-6 py-2 rounded-lg mt-4 cursor-pointer">
+      📂 Import PPT
+      <input type="file" (change)="importPPT($event)" accept=".ppt,.pptx" hidden>
+    </label>
+
+    <!-- Choose a Template -->
+    <div class="flex flex-col">
+      <h2 class="text-lg text-gray-600 mb-2">Start with a template</h2>
       <div class="flex space-x-4">
-        <div
-          *ngFor="let slide of recentSlides"
-          class="w-32 h-20 bg-white border border-gray-300 rounded-lg shadow-md cursor-pointer"
-          (click)="openSlide(slide.id)"
-        >
-          <p class="text-center text-sm text-gray-500 pt-6">{{ slide.title }}</p>
+        <div *ngFor="let template of templates" (click)="selectTemplate(template)"
+          class="w-32 h-32 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-200 cursor-pointer">
+          <img [src]="template.image" [alt]="template.name" class="w-full h-full object-cover rounded-lg" />
         </div>
       </div>
     </div>
   </div>
-  
+
+  <!-- Recent Slides (Optional) -->
+  <div *ngIf="recentSlides.length" class="mt-10">
+    <h2 class="text-lg text-gray-600 mb-2">Recent Slides</h2>
+
+    <div class="flex space-x-4">
+      <div *ngFor="let template of templates" (click)="selectTemplate(template)"
+        class="w-32 h-32 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-200 cursor-pointer">
+        <img [src]="template.image" [alt]="template.name" class="w-full h-full object-cover rounded-lg" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Slides (Optional) -->
+<div *ngIf="recentSlides.length" class="mt-10">
+  <h2 class="text-lg text-gray-600 mb-2">Recent Slides</h2>
+  <div class="flex space-x-4">
+    <div *ngFor="let slide of recentSlides"
+      class="w-32 h-20 bg-white border border-gray-300 rounded-lg shadow-md cursor-pointer"
+      (click)="openSlide(slide.id)">
+      <p class="text-center text-sm text-gray-500 pt-6">{{ slide.title }}</p>
+    </div>
+  </div>
+</div>
+</div>

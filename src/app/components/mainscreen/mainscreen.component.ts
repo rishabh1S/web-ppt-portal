@@ -3,27 +3,26 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Slide } from '../../model/Slide';
 import { SlideService } from '../../services/slide.service';
+import { SlideViewComponent } from '../slide-view/slide-view.component';
 
 @Component({
   selector: 'app-mainscreen',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SlideViewComponent],
   templateUrl: './mainscreen.component.html',
 })
 export class MainscreenComponent {
-  // Hold the currently selected slide
   selectedSlide: Slide | null = null;
 
   constructor(private slideService: SlideService) {
     this.slideService.selectedSlide$.subscribe((slide) => {
-      // Create a new object so two-way binding works properly
       this.selectedSlide = slide ? { ...slide } : null;
     });
   }
 
-  // Call this whenever a bound field is updated
-  updateSlide(): void {
-    if (this.selectedSlide) {
-      this.slideService.updateSlide(this.selectedSlide);  
+  updateSlide(updatedSlide: Slide): void {
+    if (updatedSlide) {
+      this.selectedSlide = updatedSlide;
+      this.slideService.updateSlide(updatedSlide);
     }
   }
 }

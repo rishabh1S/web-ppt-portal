@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,7 +26,7 @@ export class LandingPageComponent {
   constructor(private router: Router) {}
 
   createNewSlide() {
-    const uniqueId = uuidv4(); 
+    const uniqueId = uuidv4();
     this.router.navigate(['/ppt-screen', uniqueId]);
   }
 
