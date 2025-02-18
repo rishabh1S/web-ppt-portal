@@ -5,37 +5,129 @@
             class="bg-[#f9fbfd] p-2 w-64 rounded text-lg font-normal text-[#444746]" />
     </div>
     <div class="flex items-center space-x-2">
-        <button class="p-2 hover:bg-gray-200 rounded" title="Bold">
+        <button class="p-2 hover:bg-gray-200 rounded" title="Bold" (click)="onBoldClick()">
             <ng-icon name="bold" class="h-4 w-4"></ng-icon>
         </button>
-        <button class="p-2 hover:bg-gray-200 rounded" title="Italic">
+        <button class="p-2 hover:bg-gray-200 rounded" title="Italic" (click)="onItalicClick()">
             <ng-icon name="italic" class="h-4 w-4"></ng-icon>
         </button>
-        <button class="p-2 hover:bg-gray-200 rounded" title="Underline">
+        <button class="p-2 hover:bg-gray-200 rounded" title="Underline" (click)="onUnderlineClick()">
             <ng-icon name="underline" class="h-4 w-4"></ng-icon>
         </button>
-        <button class="p-2 hover:bg-gray-200 rounded" title="Align Left">
-            <ng-icon name="alignLeft" class="h-4 w-4"></ng-icon>
-        </button>
         <div class="relative">
-            <button class="border p-2 rounded inline-flex items-center" (click)="toggleDropdown()">
-                Insert
-                <ng-icon name="chevronDown" class="ml-2 h-4 w-4"></ng-icon>
+            <button class="p-2 hover:bg-gray-200 rounded inline-flex items-center" title="Text Alignment"
+                (click)="toggleAlignDropdown()">
+                <ng-icon name="alignLeft" class="h-4 w-4"></ng-icon>
+                <ng-icon name="chevronDown" class="ml-1 h-4 w-4"></ng-icon>
             </button>
-            <div *ngIf="isDropdownOpen" class="absolute right-0 mt-2 w-40 bg-white shadow-lg border rounded z-10">
-                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left" (click)="onInsert('table')">
-                    <ng-icon name="table" class="mr-2 h-4 w-4"></ng-icon>
-                    <span>Table</span>
+            <div *ngIf="isAlignDropdownOpen" class="absolute left-0 mt-2 shadow-lg bg-blue-50 p-1 rounded z-10">
+                <div class="flex gap-4">
+                    <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left" (click)="onAlign('left')">
+                        <ng-icon name="alignLeft"></ng-icon>
+                    </button>
+                    <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                        (click)="onAlign('center')">
+                        <ng-icon name="alignCenter"></ng-icon>
+                    </button>
+                    <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left" (click)="onAlign('right')">
+                        <ng-icon name="alignRight"></ng-icon>
+                    </button>
+                    <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                        (click)="onAlign('justify')">
+                        <ng-icon name="justify"></ng-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="relative">
+            <button class="p-2 hover:bg-gray-200 rounded inline-flex items-center" title="Font Size"
+                (click)="toggleFontSizeDropdown()">
+                <span class="text-sm">Size</span>
+                <ng-icon name="chevronDown" class="ml-1 h-4 w-4"></ng-icon>
+            </button>
+            <div *ngIf="isFontSizeDropdownOpen" class="absolute left-0 mt-2 shadow-lg bg-blue-50 p-1 rounded z-10">
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onFontSizeChange('small')">
+                    <span>Small</span>
                 </button>
-                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left" (click)="onInsert('image')">
-                    <ng-icon name="image" class="mr-2 h-4 w-4"></ng-icon>
-                    <span>Image</span>
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onFontSizeChange(false)">
+                    <span>Normal</span>
                 </button>
-                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left" (click)="onInsert('shape')">
-                    <ng-icon name="plusCircle" class="mr-2 h-4 w-4"></ng-icon>
-                    <span>Shape</span>
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onFontSizeChange('large')">
+                    <span>Large</span>
+                </button>
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onFontSizeChange('huge')">
+                    <span>Huge</span>
                 </button>
             </div>
+        </div>
+        <div class="relative">
+            <button class="p-2 hover:bg-gray-200 rounded inline-flex items-center" title="Highlight Text"
+                (click)="toggleHighlightDropdown()">
+                <span class="text-sm">Highlight</span>
+                <ng-icon name="chevronDown" class="ml-1 h-4 w-4"></ng-icon>
+            </button>
+            <div *ngIf="isHighlightDropdownOpen" class="absolute left-0 mt-2 shadow-lg bg-blue-50 p-1 rounded z-10">
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onHighlightChange('yellow')">
+                    <span>Yellow</span>
+                </button>
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onHighlightChange('green')">
+                    <span>Green</span>
+                </button>
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onHighlightChange('pink')">
+                    <span>Pink</span>
+                </button>
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onHighlightChange(false)">
+                    <span>Clear</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="relative">
+            <button class="p-2 hover:bg-gray-200 rounded inline-flex items-center" title="Font Color"
+                (click)="toggleFontColorDropdown()">
+                <span class="text-sm">Color</span>
+                <ng-icon name="chevronDown" class="ml-1 h-4 w-4"></ng-icon>
+            </button>
+            <div *ngIf="isFontColorDropdownOpen" class="absolute left-0 mt-2 shadow-lg bg-blue-50 p-1 rounded z-10">
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onFontColorChange('red')">
+                    <span>Red</span>
+                </button>
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onFontColorChange('blue')">
+                    <span>Blue</span>
+                </button>
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onFontColorChange('black')">
+                    <span>Black</span>
+                </button>
+                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onFontColorChange(false)">
+                    <span>Clear</span>
+                </button>
+            </div>
+        </div>
+        <div class="flex">
+            <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left" (click)="onInsert('table')">
+                <ng-icon name="table" class="mr-2 h-4 w-4"></ng-icon>
+                <span>Table</span>
+            </button>
+            <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left" (click)="onInsert('image')">
+                <ng-icon name="image" class="mr-2 h-4 w-4"></ng-icon>
+                <span>Image</span>
+            </button>
+            <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left" (click)="onInsert('shape')">
+                <ng-icon name="plusCircle" class="mr-2 h-4 w-4"></ng-icon>
+                <span>Shape</span>
+            </button>
         </div>
     </div>
     <div>
