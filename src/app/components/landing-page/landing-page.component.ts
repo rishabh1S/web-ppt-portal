@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import JSZip from 'jszip';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-landing-page',
@@ -50,9 +49,11 @@ export class LandingPageComponent {
       const slideData: any[] = [];
 
       // Extract slides
-      const slideFiles = Object.keys(zip.files).filter(filename => filename.startsWith('ppt/slides/slide'));
+      const slideFiles = Object.keys(zip.files).filter((filename) =>
+        filename.startsWith('ppt/slides/slide')
+      );
       for (const filename of slideFiles) {
-        const xmlContent = await zip.files[filename].async("text");
+        const xmlContent = await zip.files[filename].async('text');
         slideData.push(this.extractElementsFromXML(xmlContent));
       }
 
@@ -65,19 +66,25 @@ export class LandingPageComponent {
 
   extractElementsFromXML(xmlContent: string) {
     const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+    const xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
     const elements: any[] = [];
 
     // Extract text elements
-    const texts = xmlDoc.getElementsByTagName("a:t");
+    const texts = xmlDoc.getElementsByTagName('a:t');
     for (let i = 0; i < texts.length; i++) {
-      elements.push({ type: "text", content: texts[i].textContent, x: 100, y: 50, fontSize: 14 });
+      elements.push({
+        type: 'text',
+        content: texts[i].textContent,
+        x: 100,
+        y: 50,
+        fontSize: 14,
+      });
     }
 
     // Extract image placeholders
-    const images = xmlDoc.getElementsByTagName("p:pic");
+    const images = xmlDoc.getElementsByTagName('p:pic');
     for (let i = 0; i < images.length; i++) {
-      elements.push({ type: "image", src: "placeholder.jpg", x: 200, y: 100 });
+      elements.push({ type: 'image', src: 'placeholder.jpg', x: 200, y: 100 });
     }
 
     return elements;
