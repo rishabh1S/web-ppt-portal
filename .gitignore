@@ -1,13 +1,13 @@
 # Compiled output
-frontend/dist
+dist
 /tmp
 /out-tsc
 /bazel-out
 
 # Node
-frontend/node_modules
-frontend/npm-debug.log
-frontend/yarn-error.log
+node_modules
+npm-debug.log
+yarn-error.log
 
 # IDEs and editors
 .idea/
@@ -17,14 +17,6 @@ frontend/yarn-error.log
 *.launch
 .settings/
 *.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
 
 # Miscellaneous
 frontend/.angular/cache
@@ -38,3 +30,46 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+### Environment Folder ###
+.env
