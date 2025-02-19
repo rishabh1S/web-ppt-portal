@@ -22,6 +22,7 @@
     "@ng-icons/core": "^30.3.0",
     "@ng-icons/lucide": "^30.3.0",
     "@tailwindcss/postcss": "^4.0.6",
+    "axios": "^1.7.9",
     "jszip": "^3.10.1",
     "mammoth": "^1.9.0",
     "ngx-quill": "^27.0.0",

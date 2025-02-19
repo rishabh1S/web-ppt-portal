@@ -1,4 +1,5 @@
-package com.example.webppt.services;
+package com.example.webppt.service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +34,8 @@ public class PptService {
                                 Map<String, Object> textInfo = new HashMap<>();
                                 textInfo.put("content", textRun.getRawText());
                                 textInfo.put("fontSize", textRun.getFontSize());
-                                textInfo.put("fontColor", textRun.getFontColor() != null ? textRun.getFontColor().toString() : "#000000");
+                                textInfo.put("fontColor",
+                                        textRun.getFontColor() != null ? textRun.getFontColor().toString() : "#000000");
                                 textInfo.put("fontFamily", textRun.getFontFamily());
                                 textElements.add(textInfo);
                             }
