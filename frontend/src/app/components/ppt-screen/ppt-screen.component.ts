@@ -3,19 +3,27 @@ import { ActivatedRoute } from '@angular/router';
 import * as pptx2html from 'pptx2html';
 import PptxGenJS from 'pptxgenjs';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { MainscreenComponent } from '../mainscreen/mainscreen.component';
 
 interface SlideElement {
   type: 'text' | 'image';
-  content?: string; // Text content
-  src?: string; // Image URL
-  x: number; // Position
+  content?: string;
+  src?: string;
+  x: number;
   y: number;
-  fontSize?: number; // Font size
+  fontSize?: number;
 }
 
 @Component({
   selector: 'app-ppt-screen',
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    NavbarComponent,
+    SidebarComponent,
+    MainscreenComponent,
+  ],
   templateUrl: './ppt-screen.component.html',
   styleUrl: './ppt-screen.component.css',
 })
