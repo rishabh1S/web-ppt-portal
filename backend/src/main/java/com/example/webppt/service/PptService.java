@@ -1,45 +1,61 @@
 package com.example.webppt.service;
 
-import org.apache.poi.xslf.usermodel.XMLSlideShow;
-import org.apache.poi.xslf.usermodel.XSLFPictureShape;
-import org.apache.poi.xslf.usermodel.XSLFShape;
-import org.apache.poi.xslf.usermodel.XSLFSlide;
-import org.apache.poi.xslf.usermodel.XSLFTextShape;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.webppt.model.PptData;
+import com.example.webppt.model.SlideData;
+import com.example.webppt.repository.PptDataRepository;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.apache.poi.xslf.usermodel.*;
+
+import java.util.*;
 
 @Service
 public class PptService {
-    public Map<String, Object> extractPptData(MultipartFile file) throws IOException {
-        Map<String, Object> data = new HashMap<>();
-        List<String> texts = new ArrayList<>();
-        List<byte[]> images = new ArrayList<>();
-        // Open the PPTX file using Apache POI
+    @Autowired
+    private PptDataRepository pptDataRepository;
+
+    public void savePptData(MultipartFile file) throws IOException {
+        PptData pptData = new PptData();
+        List<SlideData> slideList = new ArrayList<>();
+
         try (XMLSlideShow ppt = new XMLSlideShow(file.getInputStream())) {
-            // Loop through each slide
             for (XSLFSlide slide : ppt.getSlides()) {
-                StringBuilder slideText = new StringBuilder();
-                // Loop through each shape on the slide
+                SlideData slideData = new SlideData();
+                List<Map<String, Object>> textElements = new ArrayList<>();
+                List<Map<String, Object>> imageElements = new ArrayList<>();
+
                 for (XSLFShape shape : slide.getShapes()) {
-                    // If the shape contains text, extract it
-                    if (shape instanceof XSLFTextShape) {
-                        slideText.append(((XSLFTextShape) shape).getText()).append(" ");
+                    if (shape instanceof XSLFTextShape textShape) {
+                        for (XSLFTextParagraph paragraph : textShape.getTextParagraphs()) {
+                            for (XSLFTextRun textRun : paragraph.getTextRuns()) {
+                                Map<String, Object> textInfo = new HashMap<>();
+                                textInfo.put("content", textRun.getRawText());
+                                textInfo.put("fontSize", textRun.getFontSize());
+                                textInfo.put("fontColor",
+                                        textRun.getFontColor() != null ? textRun.getFontColor().toString() : "#000000");
+                                textInfo.put("fontFamily", textRun.getFontFamily());
+                                textElements.add(textInfo);
+                            }
+                        }
                     }
-                    // If the shape is a picture, extract the image data
-                    if (shape instanceof XSLFPictureShape) {
-                        images.add(((XSLFPictureShape) shape).getPictureData().getData());
+                    if (shape instanceof XSLFPictureShape pictureShape) {
+                        Map<String, Object> imageInfo = new HashMap<>();
+                        byte[] imgBytes = pictureShape.getPictureData().getData();
+                        imageInfo.put("imageBase64", Base64.getEncoder().encodeToString(imgBytes));
+                        imageElements.add(imageInfo);
                     }
                 }
-                texts.add(slideText.toString().trim());
+
+                slideData.setTexts(textElements);
+                slideData.setImages(imageElements);
+                slideList.add(slideData);
             }
         }
-        data.put("texts", texts);
-        data.put("images", images);
-        return data;
+
+        pptData.setSlides(slideList);
+        pptDataRepository.save(pptData);
     }
 }
