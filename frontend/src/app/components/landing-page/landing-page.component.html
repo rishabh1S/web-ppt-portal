@@ -1,51 +1,58 @@
-<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-  <h1 class="text-3xl font-semibold mb-6 text-gray-700">Welcome to Your Slides</h1>
+<div class="container mx-auto px-4 py-8">
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold">PPT Web Portal</h1>
+    <p class="text-muted-foreground">Create and edit presentations with ease</p>
+  </header>
 
-  <!-- Action Buttons -->
-  <div class="flex space-x-6">
-    <!-- Create New Slide Button -->
-    <button (click)="createNewSlide()"
-      class="flex items-center justify-center w-32 h-32 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-200">
-      <span class="text-6xl text-gray-500">+</span>
-    </button>
-    <!-- import ppt function -->
-    <label class="bg-green-500 text-white px-6 py-2 rounded-lg mt-4 cursor-pointer">
-      📂 Import PPT
-      <input type="file" (change)="importPPT($event)" accept=".ppt,.pptx" hidden>
-    </label>
+  <main>
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Start a presentation</h2>
+      <div class="flex items-center gap-4">
+        <button variant="outline" class="h-32 w-48" (click)="createNewSlide()">
+          <ng-icon name="lucideCirclePlus" size="25"></ng-icon>
+          <span>Blank</span>
+        </button>
+        <label class="h-32 w-48 cursor-pointer">
+          <ng-icon name="lucideFileUp" size="25"></ng-icon>
+          <span>Upload</span>
+          <input type="file" (change)="importPPT($event)" accept=".ppt,.pptx" hidden>
+        </label>
+      </div>
+    </section>
 
-    <!-- Choose a Template -->
-    <div class="flex flex-col">
-      <h2 class="text-lg text-gray-600 mb-2">Start with a template</h2>
-      <div class="flex space-x-4">
-        <div *ngFor="let template of templates" (click)="selectTemplate(template)"
-          class="w-32 h-32 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-200 cursor-pointer">
-          <img [src]="template.image" [alt]="template.name" class="w-full h-full object-cover rounded-lg" />
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Template gallery</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div *ngFor="let temp of templates"
+          class="cursor-pointer border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+          <div class="p-4">
+            <div class="aspect-video bg-gray-200 mb-2 rounded"></div>
+            <p class="text-sm font-medium">Template {{ temp.name }}</p>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Recent Slides (Optional) -->
-  <div *ngIf="recentSlides.length" class="mt-10">
-    <h2 class="text-lg text-gray-600 mb-2">Recent Slides</h2>
-
-    <div class="flex space-x-4">
-      <div *ngFor="let template of templates" (click)="selectTemplate(template)"
-        class="w-32 h-32 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-200 cursor-pointer">
-        <img [src]="template.image" [alt]="template.name" class="w-full h-full object-cover rounded-lg" />
+      <div class="mt-4">
+        <a routerLink="/templates" class="text-primary hover:underline">
+          View more templates
+        </a>
       </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- Recent Slides (Optional) -->
-<div *ngIf="recentSlides.length" class="mt-10">
-  <h2 class="text-lg text-gray-600 mb-2">Recent Slides</h2>
-  <div class="flex space-x-4">
-    <div *ngFor="let slide of recentSlides"
-      class="w-32 h-20 bg-white border border-gray-300 rounded-lg shadow-md cursor-pointer"
-      (click)="openSlide(slide.id)">
-      <p class="text-center text-sm text-gray-500 pt-6">{{ slide.title }}</p>
-    </div>
-  </div>
+    <section>
+      <h2 class="text-2xl font-semibold mb-4">Recent presentations</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div *ngFor="let slide of recentSlides"
+          class="cursor-pointer hover:shadow-md transition-shadow border border-gray-200 rounded-lg">
+          <div class="p-4">
+            <div class="aspect-video bg-gray-200 mb-2 rounded"></div>
+            <h3 class="font-medium truncate">{{ slide.title }}</h3>
+            <p class="text-sm text-gray-500 flex items-center">
+              <ng-icon name="lucideClock" size="16"></ng-icon>
+              {{ slide.lastEdited }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

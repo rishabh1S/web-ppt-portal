@@ -2,11 +2,16 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
-import JSZip from 'jszip';
+import { lucideCirclePlus, lucideClock, lucideFileUp } from '@ng-icons/lucide';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { PptService } from '../../services/ppt.service';
 
 @Component({
   selector: 'app-landing-page',
-  imports: [CommonModule],
+  imports: [NgIcon, CommonModule],
+  viewProviders: [
+    provideIcons({ lucideClock, lucideCirclePlus, lucideFileUp }),
+  ],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css'],
 })
@@ -18,11 +23,13 @@ export class LandingPageComponent {
   ];
 
   recentSlides = [
-    { id: 1, title: 'Marketing Pitch' },
-    { id: 2, title: 'Project Proposal' },
+    { id: 1, title: 'Q4 Sales Report', lastEdited: '2 days ago' },
+    { id: 2, title: 'Product Roadmap', lastEdited: '1 week ago' },
+    { id: 3, title: 'Team Building Presentation', lastEdited: '2 weeks ago' },
+    { id: 4, title: 'Marketing Strategy', lastEdited: '1 month ago' },
   ];
 
-  constructor(private router: Router) {}
+  constructor(private pptService: PptService, private router: Router) {}
 
   createNewSlide() {
     const uniqueId = uuidv4();
@@ -37,31 +44,16 @@ export class LandingPageComponent {
     this.router.navigate(['/ppt-screen/open', slideId]);
   }
 
-  async importPPT(event: any) {
+  async importPPT(event: any): Promise<void> {
     const file = event.target.files[0];
     if (!file) return;
 
-    const uniqueId = uuidv4();
-    const reader = new FileReader();
-
-    reader.onload = async (e) => {
-      const zip = await JSZip.loadAsync(e.target?.result as ArrayBuffer);
-      const slideData: any[] = [];
-
-      // Extract slides
-      const slideFiles = Object.keys(zip.files).filter((filename) =>
-        filename.startsWith('ppt/slides/slide')
-      );
-      for (const filename of slideFiles) {
-        const xmlContent = await zip.files[filename].async('text');
-        slideData.push(this.extractElementsFromXML(xmlContent));
-      }
-
-      sessionStorage.setItem(`ppt-${uniqueId}`, JSON.stringify(slideData));
-      this.router.navigate(['/ppt-screen', uniqueId]);
-    };
-
-    reader.readAsArrayBuffer(file);
+    try {
+      const response = await this.pptService.uploadPpt(file);
+      console.log('Upload success:', response);
+    } catch (error) {
+      console.error('Upload failed:', error);
+    }
   }
 
   extractElementsFromXML(xmlContent: string) {
