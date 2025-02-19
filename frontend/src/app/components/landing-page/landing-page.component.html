@@ -7,17 +7,21 @@
   <main>
     <section class="mb-12">
       <h2 class="text-2xl font-semibold mb-4">Start a presentation</h2>
-      <div class="flex items-center gap-4">
-        <button variant="outline" class="h-32 w-48" (click)="createNewSlide()">
+      <div class="flex gap-4">
+        <button variant="outline"
+          class="h-32 w-48 flex flex-col items-center justify-center gap-2 border border-gray-200 rounded-lg"
+          (click)="createNewSlide()">
           <ng-icon name="lucideCirclePlus" size="25"></ng-icon>
           <span>Blank</span>
         </button>
-        <label class="h-32 w-48 cursor-pointer">
+        <label
+          class="h-32 w-48 flex flex-col items-center justify-center gap-2 cursor-pointer border border-gray-200 rounded-lg">
           <ng-icon name="lucideFileUp" size="25"></ng-icon>
           <span>Upload</span>
-          <input type="file" (change)="importPPT($event)" accept=".ppt,.pptx" hidden>
+          <input type="file" (change)="importPPT($event)" accept=".ppt,.pptx" hidden />
         </label>
       </div>
+
     </section>
 
     <section class="mb-12">
@@ -26,7 +30,8 @@
         <div *ngFor="let temp of templates"
           class="cursor-pointer border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
           <div class="p-4">
-            <div class="aspect-video bg-gray-200 mb-2 rounded"></div>
+            <!-- <div class="aspect-video bg-gray-200 mb-2 rounded"></div> -->
+            <img [src]="temp.image" alt="Template thumbnail" class="aspect-video object-cover rounded" />
             <p class="text-sm font-medium">Template {{ temp.name }}</p>
           </div>
         </div>

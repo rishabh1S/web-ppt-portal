@@ -17,9 +17,9 @@ import { PptService } from '../../services/ppt.service';
 })
 export class LandingPageComponent {
   templates = [
-    { name: 'Business', image: 'assets/templates/business.jpg' },
-    { name: 'Creative', image: 'assets/templates/creative.jpg' },
-    { name: 'Minimal', image: 'assets/templates/minimal.jpg' },
+    { name: 'Business', image: 'https://picsum.photos/id/231/400/225' },
+    { name: 'Creative', image: 'https://picsum.photos/id/221/400/225' },
+    { name: 'Minimal', image: 'https://picsum.photos/id/233/400/225' },
   ];
 
   recentSlides = [
