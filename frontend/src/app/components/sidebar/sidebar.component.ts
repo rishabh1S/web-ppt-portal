@@ -25,23 +25,23 @@ export class SidebarComponent {
 
   addSlide(): void {
     const newSlide: Slide = {
-      id: Date.now(),
-      template: 'title',
-      content: {
-        title: 'Enter Title',
-        subtitle: 'Enter Subtitle',
-      },
+      id: uuidv4(),
+      elements: [],
+      annotations: [],
     };
     this.slideService.addSlide(newSlide);
   }
 
   // Delete a slide
-  deleteSlide(id: number): void {
-    this.slideService.deleteSlide(id);
-  }
+  // deleteSlide(id: number): void {
+  //   this.slideService.deleteSlide(id);
+  // }
 
   // Select a slide so that its details show up in the main screen
   selectSlide(slide: Slide): void {
     this.slideService.selectSlide(slide);
   }
+}
+function uuidv4(): string {
+  throw new Error('Function not implemented.');
 }

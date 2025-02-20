@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { lucideCirclePlus, lucideClock, lucideFileUp } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { PptService } from '../../services/ppt.service';
+import { lastValueFrom } from 'rxjs';
+import { PresentationService } from '../../services/presentation.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -29,7 +30,10 @@ export class LandingPageComponent {
     { id: 4, title: 'Marketing Strategy', lastEdited: '1 month ago' },
   ];
 
-  constructor(private pptService: PptService, private router: Router) {}
+  constructor(
+    private presentationService: PresentationService,
+    private router: Router
+  ) {}
 
   createNewSlide() {
     const uniqueId = uuidv4();
@@ -49,8 +53,20 @@ export class LandingPageComponent {
     if (!file) return;
 
     try {
-      const response = await this.pptService.uploadPpt(file);
-      console.log('Upload success:', response);
+      // 1. Upload PPT and get presentation ID
+      const presentation = await lastValueFrom(
+        this.presentationService.uploadPresentation(file)
+      );
+
+      // 2. Fetch the created presentation data
+      const fullPresentation = await lastValueFrom(
+        this.presentationService.getPresentation(presentation.id)
+      );
+
+      console.log('Presentation Data:', fullPresentation);
+
+      // 3. Navigate to presentation editor
+      this.router.navigate(['/ppt-screen', presentation.id]);
     } catch (error) {
       console.error('Upload failed:', error);
     }
