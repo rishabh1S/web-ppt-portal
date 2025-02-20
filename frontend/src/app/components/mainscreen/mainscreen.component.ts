@@ -3,17 +3,30 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Slide } from '../../model/Slide';
 import { SlideService } from '../../services/slide.service';
-import { SlideViewComponent } from '../slide-view/slide-view.component';
+import { EditorService } from '../../services/editor.service';
+import { QuillModule } from 'ngx-quill';
+import Quill from 'quill';
 
 @Component({
   selector: 'app-mainscreen',
-  imports: [CommonModule, FormsModule, SlideViewComponent],
+  imports: [CommonModule, FormsModule, QuillModule],
   templateUrl: './mainscreen.component.html',
 })
 export class MainscreenComponent {
   selectedSlide: Slide | null = null;
+  isEditable = true;
 
-  constructor(private slideService: SlideService) {
+  quillModules = {
+    toolbar: false,
+    clipboard: {
+      matchVisual: false,
+    },
+  };
+
+  constructor(
+    private slideService: SlideService,
+    private editorService: EditorService
+  ) {
     this.slideService.selectedSlide$.subscribe((slide) => {
       this.selectedSlide = slide ? { ...slide } : null;
     });
@@ -23,6 +36,12 @@ export class MainscreenComponent {
     if (updatedSlide) {
       this.selectedSlide = updatedSlide;
       this.slideService.updateSlide(updatedSlide);
+    }
+  }
+
+  onSelectionChanged(event: { editor: Quill; oldRange: any; range: any }) {
+    if (event.range) {
+      this.editorService.setActiveEditor(event.editor);
     }
   }
 }

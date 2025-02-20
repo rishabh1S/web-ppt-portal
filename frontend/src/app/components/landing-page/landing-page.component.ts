@@ -71,30 +71,4 @@ export class LandingPageComponent {
       console.error('Upload failed:', error);
     }
   }
-
-  extractElementsFromXML(xmlContent: string) {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
-    const elements: any[] = [];
-
-    // Extract text elements
-    const texts = xmlDoc.getElementsByTagName('a:t');
-    for (let i = 0; i < texts.length; i++) {
-      elements.push({
-        type: 'text',
-        content: texts[i].textContent,
-        x: 100,
-        y: 50,
-        fontSize: 14,
-      });
-    }
-
-    // Extract image placeholders
-    const images = xmlDoc.getElementsByTagName('p:pic');
-    for (let i = 0; i < images.length; i++) {
-      elements.push({ type: 'image', src: 'placeholder.jpg', x: 200, y: 100 });
-    }
-
-    return elements;
-  }
 }

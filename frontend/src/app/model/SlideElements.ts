@@ -1,9 +1,15 @@
 export interface SlideElement {
   id: string;
-  type: 'TEXT' | 'IMAGE' | 'SHAPE';
+  type: ElementType;
   content: string;
   x: number;
   y: number;
   width: number;
   height: number;
+}
+
+export enum ElementType {
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+  SHAPE = 'SHAPE',
 }

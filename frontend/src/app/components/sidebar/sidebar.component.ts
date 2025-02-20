@@ -5,11 +5,11 @@ import { lucideCirclePlus, lucideTrash } from '@ng-icons/lucide';
 import { Observable } from 'rxjs';
 import { Slide } from '../../model/Slide';
 import { SlideService } from '../../services/slide.service';
-import { SlideViewComponent } from '../slide-view/slide-view.component';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [NgIcon, CommonModule, SlideViewComponent],
+  imports: [NgIcon, CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
   viewProviders: [provideIcons({ lucideCirclePlus, lucideTrash })],
@@ -33,15 +33,12 @@ export class SidebarComponent {
   }
 
   // Delete a slide
-  // deleteSlide(id: number): void {
-  //   this.slideService.deleteSlide(id);
-  // }
+  deleteSlide(id: string): void {
+    this.slideService.deleteSlide(id);
+  }
 
   // Select a slide so that its details show up in the main screen
   selectSlide(slide: Slide): void {
     this.slideService.selectSlide(slide);
   }
-}
-function uuidv4(): string {
-  throw new Error('Function not implemented.');
 }

@@ -1,75 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import * as pptx2html from 'pptx2html';
-import PptxGenJS from 'pptxgenjs';
-import { CommonModule } from '@angular/common';
+import { PresentationService } from '../../services/presentation.service';
+import { SlideService } from '../../services/slide.service';
+import { Presentation } from '../../model/Presentation';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { MainscreenComponent } from '../mainscreen/mainscreen.component';
-
-interface SlideElement {
-  type: 'text' | 'image';
-  content?: string;
-  src?: string;
-  x: number;
-  y: number;
-  fontSize?: number;
-}
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-ppt-screen',
-  imports: [
-    CommonModule,
-    NavbarComponent,
-    SidebarComponent,
-    MainscreenComponent,
-  ],
+  imports: [NavbarComponent, MainscreenComponent, SidebarComponent],
   templateUrl: './ppt-screen.component.html',
-  styleUrl: './ppt-screen.component.css',
+  styleUrls: ['./ppt-screen.component.css'],
 })
 export class PptScreenComponent implements OnInit {
-  slideId: string | null = null;
-  slides: SlideElement[][] = [];
+  presentationId!: string;
+  presentation!: Presentation;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private presentationService: PresentationService,
+    private slideService: SlideService
+  ) {}
 
-  ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
-      this.slideId = params.get('id');
+  ngOnInit(): void {
+    this.presentationId = this.route.snapshot.paramMap.get('id')!;
+    this.loadPresentation(this.presentationId);
+  }
 
-      const storedPpt = sessionStorage.getItem(`ppt-${this.slideId}`);
-      if (storedPpt) {
-        this.slides = JSON.parse(storedPpt);
-      }
+  loadPresentation(id: string): void {
+    this.presentationService.getPresentation(id).subscribe({
+      next: (pres) => {
+        this.presentation = pres;
+        // Add each slide to the SlideService so that the sidebar and mainscreen are in sync
+        pres.slides.forEach((slide) => {
+          this.slideService.addSlide(slide);
+        });
+      },
+      error: (err) => console.error('Error loading presentation:', err),
     });
-  }
-
-  renderSlide(slideXml: string): string {
-    return pptx2html.convert(slideXml);
-  }
-
-  generatePPT() {
-    let pptx = new PptxGenJS();
-
-    this.slides.forEach((slideData) => {
-      let slide = pptx.addSlide();
-
-      slideData.forEach((element) => {
-        if (element.type === 'text') {
-          slide.addText(element.content ?? '', {
-            x: element.x / 100,
-            y: element.y / 100,
-            fontSize: element.fontSize,
-          });
-        }
-      });
-    });
-
-    pptx.writeFile({ fileName: `updated-presentation-${this.slideId}.pptx` });
-  }
-
-  updateText(slideIndex: number, elementIndex: number, event: any) {
-    this.slides[slideIndex][elementIndex].content = event.target.innerText;
-    sessionStorage.setItem(`ppt-${this.slideId}`, JSON.stringify(this.slides));
   }
 }
