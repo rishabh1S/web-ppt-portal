@@ -73,3 +73,6 @@ build/
 
 ### Environment Folder ###
 .env
+
+# Uploads Folder # 
+uploads/
