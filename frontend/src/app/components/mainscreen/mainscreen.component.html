@@ -1,5 +1,44 @@
-<div *ngIf="selectedSlide; else noSlide" class="bg-background aspect-video rounded-md shadow-lg p-4 bg-white">
-    <app-slide-view [slide]="selectedSlide" [isEditable]="true" (contentUpdate)="updateSlide($event)"></app-slide-view>
+<div *ngIf="selectedSlide; else noSlide" class="relative bg-background aspect-video rounded-md shadow-lg bg-white"
+    style="position: relative;">
+    <!-- Loop over each element on the slide -->
+    <div *ngFor="let element of selectedSlide.elements">
+        <ng-container [ngSwitch]="element.type">
+
+            <!-- For text elements, render a quill editor -->
+            <div *ngSwitchCase="'TEXT'" class="absolute" [ngStyle]="{
+             'left.%': element.x, 
+             'top.%': element.y, 
+             'width.%': element.width, 
+             'height.%': element.height
+           }">
+                <quill-editor [(ngModel)]="element.content" [modules]="quillModules"
+                    (onSelectionChanged)="onSelectionChanged($event)" placeholder="Enter text"
+                    class="w-full h-full bg-white p-2 rounded">
+                </quill-editor>
+            </div>
+
+            <!-- For image elements, render an image -->
+            <div *ngSwitchCase="'IMAGE'" class="absolute" [ngStyle]="{
+             'left.%': element.x, 
+             'top.%': element.y, 
+             'width.%': element.width, 
+             'height.%': element.height
+           }">
+                <img [src]="element.content" alt="Slide Image" class="object-contain w-full h-full" />
+            </div>
+
+            <!-- Optional: add handling for SHAPE or other types -->
+            <div *ngSwitchDefault class="absolute" [ngStyle]="{
+             'left.%': element.x, 
+             'top.%': element.y, 
+             'width.%': element.width, 
+             'height.%': element.height
+           }">
+                <p>{{ element.content }}</p>
+            </div>
+
+        </ng-container>
+    </div>
 </div>
 
 <ng-template #noSlide>

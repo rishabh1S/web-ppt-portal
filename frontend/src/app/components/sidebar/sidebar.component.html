@@ -17,11 +17,11 @@
   'border-purple-500 border-2': data.selectedSlide?.id === slide.id,
   'border-gray-300': data.selectedSlide?.id !== slide.id
 }" (click)="selectSlide(slide)">
-            <!-- <button type="button" (click)="deleteSlide(slide.id); $event.stopPropagation()"
+            <button type="button" (click)="deleteSlide(slide.id); $event.stopPropagation()"
                 class="absolute top-2 right-2 text-red-500">
                 <ng-icon name="lucideTrash"></ng-icon>
-            </button> -->
-            <app-slide-view [slide]="slide" [isEditable]="false"></app-slide-view>
+            </button>
+            <div>Slide 1</div>
         </div>
     </ng-container>
 </div>
