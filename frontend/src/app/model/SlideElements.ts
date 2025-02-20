@@ -6,8 +6,11 @@ export interface SlideElement {
   y: number;
   width: number;
   height: number;
+  style: {
+    fontSize: number;
+    color: string;
+  };
 }
-
 export enum ElementType {
   TEXT = 'TEXT',
   IMAGE = 'IMAGE',
