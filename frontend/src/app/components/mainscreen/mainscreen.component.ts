@@ -44,4 +44,11 @@ export class MainscreenComponent {
       this.editorService.setActiveEditor(event.editor);
     }
   }
+
+  setEditorFontSize(editor: Quill, fontSize: number): void {
+    const editorElem = editor.root;
+    if (editorElem && fontSize) {
+      editorElem.style.fontSize = fontSize + 'px';
+    }
+  }
 }
