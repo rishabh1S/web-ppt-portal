@@ -26,16 +26,16 @@ export class SlideViewComponent {
 
   constructor(private editorService: EditorService) {}
 
-  onContentChange(field: string, value: string) {
-    const updatedSlide: Slide = {
-      ...this.slide,
-      content: {
-        ...this.slide.content,
-        [field]: value,
-      },
-    };
-    this.contentUpdate.emit(updatedSlide);
-  }
+  // onContentChange(field: string, value: string) {
+  //   const updatedSlide: Slide = {
+  //     ...this.slide,
+  //     content: {
+  //       ...this.slide.content,
+  //       [field]: value,
+  //     },
+  //   };
+  //   this.contentUpdate.emit(updatedSlide);
+  // }
 
   onSelectionChanged(event: { editor: Quill; oldRange: any; range: any }) {
     if (event.range) {

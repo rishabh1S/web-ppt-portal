@@ -30,12 +30,12 @@ export class SlideService {
     this.selectedSlideSubject.next(updatedSlide);
   }
 
-  deleteSlide(id: number): void {
-    const slides = this.slidesSubject.getValue().filter((s) => s.id !== id);
-    this.slidesSubject.next(slides);
-    const currentSelected = this.selectedSlideSubject.getValue();
-    if (currentSelected && currentSelected.id === id) {
-      this.selectedSlideSubject.next(null);
-    }
-  }
+  // deleteSlide(id: number): void {
+  //   const slides = this.slidesSubject.getValue().filter((s) => s.id !== id);
+  //   this.slidesSubject.next(slides);
+  //   const currentSelected = this.selectedSlideSubject.getValue();
+  //   if (currentSelected && currentSelected.id === id) {
+  //     this.selectedSlideSubject.next(null);
+  //   }
+  // }
 }

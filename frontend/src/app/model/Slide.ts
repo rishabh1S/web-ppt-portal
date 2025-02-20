@@ -1,9 +1,8 @@
+import { Annotation } from './Annotation';
+import { SlideElement } from './SlideElements';
+
 export interface Slide {
-  id: number;
-  template: 'title' | 'content' | 'blank';
-  content: {
-    title?: string;
-    subtitle?: string;
-    body?: string;
-  };
+  id: string;
+  elements: SlideElement[];
+  annotations: Annotation[];
 }
