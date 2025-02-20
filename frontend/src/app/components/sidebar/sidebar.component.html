@@ -14,14 +14,14 @@
         <div *ngFor="let slide of data.slides; let i = index"
             class="relative aspect-video border rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-100"
             [ngClass]="{
-  'border-purple-500 border-2': data.selectedSlide?.id === slide.id,
-  'border-gray-300': data.selectedSlide?.id !== slide.id
-}" (click)="selectSlide(slide)">
+          'border-purple-500 border-2': data.selectedSlide?.id === slide.id,
+          'border-gray-300': data.selectedSlide?.id !== slide.id
+        }" (click)="selectSlide(slide)">
             <button type="button" (click)="deleteSlide(slide.id); $event.stopPropagation()"
                 class="absolute top-2 right-2 text-red-500">
                 <ng-icon name="lucideTrash"></ng-icon>
             </button>
-            <div>Slide 1</div>
+            <div>Slide {{ i + 1 }}</div>
         </div>
     </ng-container>
 </div>
