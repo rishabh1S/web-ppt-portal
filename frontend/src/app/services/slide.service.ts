@@ -38,4 +38,9 @@ export class SlideService {
       this.selectedSlideSubject.next(null);
     }
   }
+
+  clearSlides(): void {
+    this.slidesSubject.next([]);
+    this.selectedSlideSubject.next(null);
+  }
 }

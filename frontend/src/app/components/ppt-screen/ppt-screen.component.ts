@@ -31,11 +31,11 @@ export class PptScreenComponent implements OnInit {
   loadPresentation(id: string): void {
     this.presentationService.getPresentation(id).subscribe({
       next: (pres) => {
-        this.presentation = pres;
-        // Add each slide to the SlideService so that the sidebar and mainscreen are in sync
-        pres.slides.forEach((slide) => {
-          this.slideService.addSlide(slide);
-        });
+        // Clear previous slides
+        this.slideService.clearSlides();
+
+        // Add new slides
+        pres.slides.forEach((slide) => this.slideService.addSlide(slide));
       },
       error: (err) => console.error('Error loading presentation:', err),
     });

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { lucideCirclePlus, lucideClock, lucideFileUp } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lastValueFrom } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { PresentationService } from '../../services/presentation.service';
 
 @Component({
@@ -48,27 +48,23 @@ export class LandingPageComponent {
     this.router.navigate(['/ppt-screen/open', slideId]);
   }
 
-  async importPPT(event: any): Promise<void> {
+  importPPT(event: any): void {
     const file = event.target.files[0];
     if (!file) return;
 
-    try {
-      // 1. Upload PPT and get presentation ID
-      const presentation = await lastValueFrom(
-        this.presentationService.uploadPresentation(file)
-      );
-
-      // 2. Fetch the created presentation data
-      const fullPresentation = await lastValueFrom(
-        this.presentationService.getPresentation(presentation.id)
-      );
-
-      console.log('Presentation Data:', fullPresentation);
-
-      // 3. Navigate to presentation editor
-      this.router.navigate(['/ppt-screen', presentation.id]);
-    } catch (error) {
-      console.error('Upload failed:', error);
-    }
+    this.presentationService
+      .uploadPresentation(file)
+      .pipe(
+        switchMap((presentation) =>
+          this.presentationService.getPresentation(presentation.id)
+        )
+      )
+      .subscribe({
+        next: (fullPresentation) => {
+          console.log('Presentation Data:', fullPresentation);
+          this.router.navigate(['/ppt-screen', fullPresentation.id]);
+        },
+        error: (err) => console.error('Upload failed:', err),
+      });
   }
 }
