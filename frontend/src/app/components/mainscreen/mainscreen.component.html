@@ -1,10 +1,7 @@
 <div *ngIf="selectedSlide; else noSlide" class="relative bg-background aspect-video rounded-md shadow-lg bg-white"
     style="position: relative;">
-    <!-- Loop over each element on the slide -->
     <div *ngFor="let element of selectedSlide.elements">
         <ng-container [ngSwitch]="element.type">
-
-            <!-- For text elements, render a quill editor with custom styles -->
             <div *ngSwitchCase="'TEXT'" class="absolute" [ngStyle]="{
            'left.%': element.x, 
            'top.%': element.y, 
@@ -12,12 +9,11 @@
            'height.%': element.height
          }">
                 <quill-editor [(ngModel)]="element.content" [modules]="quillModules"
-                    (onSelectionChanged)="onSelectionChanged($event)" placeholder="Enter text"
-                    class="w-full h-full bg-white p-2 rounded">
+                    (onSelectionChanged)="onSelectionChanged($event)"
+                    (onEditorCreated)="setEditorFontSize($event, element.style.fontSize)" placeholder="Enter text"
+                    class="w-full h-full bg-white p-2 rounded" [style.color]="element.style.color">
                 </quill-editor>
             </div>
-
-            <!-- For image elements, render an image -->
             <div *ngSwitchCase="'IMAGE'" class="absolute" [ngStyle]="{
            'left.%': element.x, 
            'top.%': element.y, 
@@ -26,8 +22,6 @@
          }">
                 <img [src]="element.content" alt="Slide Image" class="object-contain w-full h-full" />
             </div>
-
-            <!-- Optional: handling for SHAPE or other types -->
             <div *ngSwitchDefault class="absolute" [ngStyle]="{
            'left.%': element.x, 
            'top.%': element.y, 
@@ -36,7 +30,6 @@
          }">
                 <p>{{ element.content }}</p>
             </div>
-
         </ng-container>
     </div>
 </div>
