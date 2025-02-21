@@ -2,7 +2,6 @@
     style="position: relative;">
     <div *ngFor="let element of selectedSlide.elements">
         <ng-container [ngSwitch]="element.type">
-            <!-- For text elements, render a quill editor with custom styles -->
             <div *ngSwitchCase="'TEXT'" class="absolute" [ngStyle]="{
            'left.%': element.x, 
            'top.%': element.y, 
@@ -24,14 +23,11 @@
                 <img [src]="element.content" alt="Slide Image" class="object-contain w-full h-full" />
             </div>
 
-            <!-- Optional: handling for SHAPE or other types -->
-            <div *ngSwitchDefault class="absolute" [ngStyle]="{
-           'left.%': element.x, 
-           'top.%': element.y, 
-           'width.%': element.width, 
-           'height.%': element.height
-         }">
-                <p>{{ element.content }}</p>
+            <div *ngSwitchCase="'SHAPE'">
+                <app-shape-renderer [type]="element.content" [x]="element.x" [y]="element.y" [width]="element.width"
+                    [height]="element.height" [fillColor]="element.style.fillColor"
+                    [strokeColor]="element.style.strokeColor" [strokeWidth]="element.style.strokeWidth">
+                </app-shape-renderer>
             </div>
         </ng-container>
     </div>

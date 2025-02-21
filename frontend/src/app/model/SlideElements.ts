@@ -9,6 +9,9 @@ export interface SlideElement {
   style: {
     fontSize: number;
     color: string;
+    fillColor: string;
+    strokeColor: string;
+    strokeWidth: number;
   };
 }
 export enum ElementType {

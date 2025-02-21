@@ -6,10 +6,11 @@ import { SlideService } from '../../services/slide.service';
 import { EditorService } from '../../services/editor.service';
 import { QuillModule } from 'ngx-quill';
 import Quill from 'quill';
+import { ShapeRendererComponent } from '../shape-renderer/shape-renderer.component';
 
 @Component({
   selector: 'app-mainscreen',
-  imports: [CommonModule, FormsModule, QuillModule],
+  imports: [CommonModule, FormsModule, QuillModule, ShapeRendererComponent],
   templateUrl: './mainscreen.component.html',
 })
 export class MainscreenComponent {
