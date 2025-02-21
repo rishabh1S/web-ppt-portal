@@ -34,4 +34,8 @@ export class PresentationService {
       content,
     });
   }
+
+  downloadPresentation(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/presentations/${id}`);
+  }
 }
