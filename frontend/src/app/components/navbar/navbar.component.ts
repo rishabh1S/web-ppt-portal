@@ -19,9 +19,10 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Slide } from '../../model/Slide';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { SlideService } from '../../services/slide.service';
 import { EditorService } from '../../services/editor.service';
+import { PresentationService } from '../../services/presentation.service';
 
 @Component({
   selector: 'app-navbar',
@@ -43,6 +44,7 @@ import { EditorService } from '../../services/editor.service';
       plusCircle: lucideCircle,
       chevronDown: lucideChevronDown,
       lucideShare: lucideShare2,
+      lucideSave: lucideSave,
     }),
   ],
   templateUrl: './navbar.component.html',
@@ -60,6 +62,7 @@ export class NavbarComponent implements OnDestroy {
 
   constructor(
     private slideService: SlideService,
+    private presentationService: PresentationService,
     private editorService: EditorService
   ) {
     this.subscription = this.slideService.selectedSlide$.subscribe(
@@ -152,6 +155,34 @@ export class NavbarComponent implements OnDestroy {
       editor.format('color', color);
     }
     this.isFontColorDropdownOpen = false;
+  }
+
+  onShare(): void {
+    const currentUrl = window.location.href;
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        console.log('URL copied to clipboard.');
+      })
+      .catch((err) => console.error('Error copying URL:', err));
+  }
+
+  onSave(): void {
+    if (!this.selectedSlide) {
+      console.warn('No slide selected to save.');
+      return;
+    }
+
+    const updateRequests = this.selectedSlide.elements.map((element) =>
+      this.presentationService.updateElement(element.id, element.content)
+    );
+
+    forkJoin(updateRequests).subscribe({
+      next: () => {
+        console.log('Slide updated successfully');
+      },
+      error: (err) => console.error('Error updating slide:', err),
+    });
   }
 
   ngOnDestroy(): void {
