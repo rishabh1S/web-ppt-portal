@@ -24,7 +24,7 @@ public class FileStorageService {
     }
 
     public String storeImage(byte[] imageData) throws IOException {
-        String fileName = UUID.randomUUID() + ".png"; // Save as PNG
+        String fileName = UUID.randomUUID() + ".png";
         Path targetPath = Paths.get(uploadDir).resolve(fileName);
         Files.write(targetPath, imageData);
         return targetPath.toString();

@@ -23,6 +23,7 @@ import { forkJoin, Subscription } from 'rxjs';
 import { SlideService } from '../../services/slide.service';
 import { EditorService } from '../../services/editor.service';
 import { PresentationService } from '../../services/presentation.service';
+import { fontSizes } from '../../../../utils/quill-config';
 
 @Component({
   selector: 'app-navbar',
@@ -57,6 +58,7 @@ export class NavbarComponent implements OnDestroy {
   isFontColorDropdownOpen = false;
   selectedSlide: Slide | null = null;
   subscription: Subscription;
+  fontSizes: string[] = fontSizes;
 
   constructor(
     private slideService: SlideService,

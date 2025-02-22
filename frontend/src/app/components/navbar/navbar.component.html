@@ -45,22 +45,15 @@
                 <span class="text-sm">Size</span>
                 <ng-icon name="lucideChevronDown" class="ml-1 h-4 w-4"></ng-icon>
             </button>
-            <div *ngIf="isFontSizeDropdownOpen" class="absolute left-0 mt-2 shadow-lg bg-blue-50 p-1 rounded z-10">
-                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
-                    (click)="onFontSizeChange('small')">
-                    <span>Small</span>
+            <div *ngIf="isFontSizeDropdownOpen"
+                class="absolute left-0 mt-2 shadow-lg bg-blue-50 p-1 rounded z-10 max-h-60 overflow-y-auto">
+                <button *ngFor="let size of fontSizes" class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
+                    (click)="onFontSizeChange(size)">
+                    <span>{{ size }}</span>
                 </button>
                 <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
                     (click)="onFontSizeChange(false)">
-                    <span>Normal</span>
-                </button>
-                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
-                    (click)="onFontSizeChange('large')">
-                    <span>Large</span>
-                </button>
-                <button class="flex items-center p-2 hover:bg-gray-100 w-full text-left"
-                    (click)="onFontSizeChange('huge')">
-                    <span>Huge</span>
+                    <span>Clear</span>
                 </button>
             </div>
         </div>

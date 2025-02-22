@@ -6,6 +6,7 @@ import { SlideService } from '../../services/slide.service';
 import { EditorService } from '../../services/editor.service';
 import { QuillModule } from 'ngx-quill';
 import Quill from 'quill';
+import { quillModules } from '../../../../utils/quill-config';
 import { ShapeRendererComponent } from '../shape-renderer/shape-renderer.component';
 
 @Component({
@@ -16,13 +17,7 @@ import { ShapeRendererComponent } from '../shape-renderer/shape-renderer.compone
 export class MainscreenComponent {
   selectedSlide: Slide | null = null;
   isEditable = true;
-
-  quillModules = {
-    toolbar: false,
-    clipboard: {
-      matchVisual: false,
-    },
-  };
+  quillModules = quillModules;
 
   constructor(
     private slideService: SlideService,
