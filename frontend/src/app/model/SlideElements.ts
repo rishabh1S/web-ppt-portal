@@ -7,6 +7,7 @@ export interface SlideElement {
   width: number;
   height: number;
   style: {
+    cellStyles: any;
     fontSize: number;
     color: string;
     fillColor: string;
@@ -18,4 +19,5 @@ export enum ElementType {
   TEXT = 'TEXT',
   IMAGE = 'IMAGE',
   SHAPE = 'SHAPE',
+  TABLE = 'TABLE',
 }

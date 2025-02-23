@@ -5,6 +5,7 @@ import com.example.webppt.model.Slide;
 import com.example.webppt.model.SlideElement;
 import com.example.webppt.model.ElementType;
 import com.example.webppt.repository.PresentationRepository;
+import com.google.gson.Gson;
 
 import org.apache.poi.sl.usermodel.PaintStyle;
 import org.apache.poi.sl.usermodel.PaintStyle.SolidPaint;
@@ -17,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
@@ -66,7 +69,15 @@ public class PresentationService {
         dbSlide.setPresentation(presentation);
 
         for (XSLFShape shape : slide.getShapes()) {
-            if (shape instanceof XSLFPictureShape) {
+            if (shape instanceof XSLFGroupShape) {
+                // Process grouped shapes recursively
+                processGroupShape((XSLFGroupShape) shape, dbSlide, presentation);
+            } else if (shape instanceof XSLFTable) {
+                // Handle TABLE
+                SlideElement element = processTable((XSLFTable) shape, presentation);
+                element.setSlide(dbSlide);
+                dbSlide.getElements().add(element);
+            } else if (shape instanceof XSLFPictureShape) {
                 // Handle IMAGE
                 SlideElement element = processImage((XSLFPictureShape) shape, presentation);
                 element.setSlide(dbSlide);
@@ -97,6 +108,26 @@ public class PresentationService {
             }
         }
         return dbSlide;
+    }
+
+    private void processGroupShape(XSLFGroupShape group, Slide dbSlide, Presentation presentation) {
+        for (XSLFShape shape : group.getShapes()) {
+            if (shape instanceof XSLFGroupShape) {
+                processGroupShape((XSLFGroupShape) shape, dbSlide, presentation);
+            } else if (shape instanceof XSLFAutoShape) {
+                // Process auto-shapes in the group
+                XSLFAutoShape autoShape = (XSLFAutoShape) shape;
+                SlideElement shapeElement = processAutoShape(autoShape, presentation);
+                shapeElement.setSlide(dbSlide);
+                dbSlide.getElements().add(shapeElement);
+
+                if (!autoShape.getText().isEmpty()) {
+                    SlideElement textElement = processTextShape(autoShape, presentation);
+                    textElement.setSlide(dbSlide);
+                    dbSlide.getElements().add(textElement);
+                }
+            }
+        }
     }
 
     private SlideElement processAutoShape(XSLFAutoShape autoShape, Presentation presentation) {
@@ -197,6 +228,52 @@ public class PresentationService {
             default:
                 return "M 0 0 H 100 V 100 H 0 Z";
         }
+    }
+
+    private SlideElement processTable(XSLFTable table, Presentation presentation) {
+        SlideElement element = createSlideElement(ElementType.TABLE, table, presentation);
+
+        // Extract table structure and content
+        List<List<String>> tableContent = new ArrayList<>();
+        Map<String, Object> tableStyle = new HashMap<>();
+
+        // Store cell styles in a nested structure
+        List<List<Map<String, Object>>> cellStyles = new ArrayList<>();
+
+        for (XSLFTableRow row : table.getRows()) {
+            List<String> rowContent = new ArrayList<>();
+            List<Map<String, Object>> rowStyles = new ArrayList<>();
+
+            for (XSLFTableCell cell : row.getCells()) {
+                // Extract cell text content
+                rowContent.add(cell.getText());
+
+                // Extract cell styling
+                Map<String, Object> cellStyle = new HashMap<>();
+                Color backgroundColor = cell.getFillColor();
+                cellStyle.put("backgroundColor", backgroundColor != null ? toHexColor(backgroundColor) : "transparent");
+
+                // Extract border colors (example for bottom border)
+                Color borderColor = cell.getBorderColor(XSLFTableCell.BorderEdge.bottom);
+                cellStyle.put("borderColor", borderColor != null ? toHexColor(borderColor) : "transparent");
+
+                // Add cell style to row styles
+                rowStyles.add(cellStyle);
+            }
+
+            // Add row content and styles to the table
+            tableContent.add(rowContent);
+            cellStyles.add(rowStyles);
+        }
+
+        // Set table content in the `content` field
+        element.setContent(new Gson().toJson(tableContent));
+
+        // Set table styles in the `style` field
+        tableStyle.put("cellStyles", cellStyles);
+        element.setStyle(tableStyle);
+
+        return element;
     }
 
     private SlideElement processTextShape(XSLFShape shape, Presentation presentation) {

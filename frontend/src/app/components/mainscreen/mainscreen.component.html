@@ -30,6 +30,21 @@
                         [attr.stroke]="element.style.strokeColor" [attr.stroke-width]="element.style.strokeWidth" />
                 </svg>
             </div>
+
+            <div *ngSwitchCase="'TABLE'" class="absolute" [ngStyle]="{
+                'left.%': element.x, 
+                'top.%': element.y, 
+                'width.%': element.width, 
+                'height.%': element.height
+            }">
+                <table class="w-full h-full border-collapse">
+                    <tr *ngFor="let row of getTableContent(element); let i = index">
+                        <td *ngFor="let cell of row; let j = index" [ngStyle]="getTableCellStyle(element, i, j)">
+                            {{ cell }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </ng-container>
     </div>
 </div>
