@@ -8,10 +8,11 @@ import { QuillModule } from 'ngx-quill';
 import Quill from 'quill';
 import { quillModules } from '../../../../utils/quill-config';
 import { SlideElement } from '../../model/SlideElements';
+import { ApplyStylesDirective } from '../../directives/apply-styles.directive';
 
 @Component({
   selector: 'app-mainscreen',
-  imports: [CommonModule, FormsModule, QuillModule],
+  imports: [CommonModule, FormsModule, QuillModule, ApplyStylesDirective],
   templateUrl: './mainscreen.component.html',
 })
 export class MainscreenComponent {

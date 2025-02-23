@@ -25,4 +25,12 @@ public class ColorUtils {
         }
         return "#000000";
     }
+
+    public String extractPaintColor(PaintStyle paintStyle) {
+        if (paintStyle instanceof SolidPaint) {
+            Color color = ((SolidPaint) paintStyle).getSolidColor().getColor();
+            return toHexColor(color);
+        }
+        return null;
+    }
 }

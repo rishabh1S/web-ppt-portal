@@ -10,7 +10,7 @@
                 <quill-editor [(ngModel)]="element.content" [modules]="quillModules"
                     (onSelectionChanged)="onSelectionChanged($event)"
                     (onEditorCreated)="setEditorFontSize($event, element.style.fontSize)" placeholder="Enter text"
-                    class="w-full h-auto" [style.color]="element.style.color">
+                    class="w-full h-auto" [applyStyles]="element.style">
                 </quill-editor>
             </div>
             <div *ngSwitchCase="'IMAGE'" class="absolute" [ngStyle]="{
