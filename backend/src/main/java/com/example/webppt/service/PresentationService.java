@@ -195,7 +195,7 @@ public class PresentationService {
             case LINE:
                 return "M 0 50 L 100 50";
             default:
-                return "M 0 0 H 100 V 100 H 0 Z"; // Default to rectangle
+                return "M 0 0 H 100 V 100 H 0 Z";
         }
     }
 
