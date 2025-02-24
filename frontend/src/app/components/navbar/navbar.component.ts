@@ -23,28 +23,27 @@ import { forkJoin, Subscription } from 'rxjs';
 import { SlideService } from '../../services/slide.service';
 import { EditorService } from '../../services/editor.service';
 import { PresentationService } from '../../services/presentation.service';
+import { fontSizes } from '../../../../utils/quill-config';
 
 @Component({
   selector: 'app-navbar',
   imports: [NgIcon, FormsModule, CommonModule],
-  providers: [
+  viewProviders: [
     provideIcons({
-      hamburger: lucideAlignJustify,
-      save: lucideSave,
-      settings: lucideSettings,
-      bold: lucideBold,
-      italic: lucideItalic,
-      underline: lucideUnderline,
-      alignLeft: lucideAlignLeft,
-      alignCenter: lucideAlignCenter,
-      alignRight: lucideAlignRight,
-      justify: lucideAlignJustify,
-      table: lucideTable,
-      image: lucideImage,
-      plusCircle: lucideCircle,
-      chevronDown: lucideChevronDown,
-      lucideShare: lucideShare2,
-      lucideSave: lucideSave,
+      lucideAlignJustify,
+      lucideSave,
+      lucideSettings,
+      lucideBold,
+      lucideItalic,
+      lucideUnderline,
+      lucideAlignLeft,
+      lucideAlignCenter,
+      lucideAlignRight,
+      lucideTable,
+      lucideImage,
+      lucideCircle,
+      lucideChevronDown,
+      lucideShare2,
     }),
   ],
   templateUrl: './navbar.component.html',
@@ -59,6 +58,7 @@ export class NavbarComponent implements OnDestroy {
   isFontColorDropdownOpen = false;
   selectedSlide: Slide | null = null;
   subscription: Subscription;
+  fontSizes: string[] = fontSizes;
 
   constructor(
     private slideService: SlideService,

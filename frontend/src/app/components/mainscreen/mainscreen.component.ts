@@ -6,22 +6,19 @@ import { SlideService } from '../../services/slide.service';
 import { EditorService } from '../../services/editor.service';
 import { QuillModule } from 'ngx-quill';
 import Quill from 'quill';
+import { quillModules } from '../../../../utils/quill-config';
+import { SlideElement } from '../../model/SlideElements';
+import { ApplyStylesDirective } from '../../directives/apply-styles.directive';
 
 @Component({
   selector: 'app-mainscreen',
-  imports: [CommonModule, FormsModule, QuillModule],
+  imports: [CommonModule, FormsModule, QuillModule, ApplyStylesDirective],
   templateUrl: './mainscreen.component.html',
 })
 export class MainscreenComponent {
   selectedSlide: Slide | null = null;
   isEditable = true;
-
-  quillModules = {
-    toolbar: false,
-    clipboard: {
-      matchVisual: false,
-    },
-  };
+  quillModules = quillModules;
 
   constructor(
     private slideService: SlideService,
@@ -50,5 +47,29 @@ export class MainscreenComponent {
     if (editorElem && fontSize) {
       editorElem.style.fontSize = fontSize + 'px';
     }
+  }
+
+  getTableContent(element: SlideElement): string[][] {
+    try {
+      return JSON.parse(element.content);
+    } catch (error) {
+      console.error('Error parsing table content:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Retrieves the style for a specific table cell.
+   */
+  getTableCellStyle(
+    element: SlideElement,
+    rowIndex: number,
+    cellIndex: number
+  ): any {
+    const cellStyles = element.style?.cellStyles;
+    if (cellStyles && cellStyles[rowIndex] && cellStyles[rowIndex][cellIndex]) {
+      return cellStyles[rowIndex][cellIndex];
+    }
+    return {};
   }
 }
