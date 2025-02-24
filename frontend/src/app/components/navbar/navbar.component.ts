@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideSave,
@@ -22,7 +22,9 @@ import { Slide } from '../../model/Slide';
 import { forkJoin, Subscription } from 'rxjs';
 import { SlideService } from '../../services/slide.service';
 import { EditorService } from '../../services/editor.service';
-import { PresentationService } from '../../services/presentation.service';
+import { PresentationService } from '../../services/presentation.service'; 
+import { ActivatedRoute } from '@angular/router';
+import PptxGenJS from "pptxgenjs";
 import { fontSizes } from '../../../../utils/quill-config';
 
 @Component({
@@ -49,6 +51,7 @@ import { fontSizes } from '../../../../utils/quill-config';
   templateUrl: './navbar.component.html',
 })
 export class NavbarComponent implements OnDestroy {
+  @Input() presentationId!: string;
   title: string = 'My App';
   isDropdownOpen = false;
   isAlignDropdownOpen = false;
@@ -63,7 +66,8 @@ export class NavbarComponent implements OnDestroy {
   constructor(
     private slideService: SlideService,
     private presentationService: PresentationService,
-    private editorService: EditorService
+    private editorService: EditorService,
+    private route : ActivatedRoute
   ) {
     this.subscription = this.slideService.selectedSlide$.subscribe(
       (slide) => (this.selectedSlide = slide)
@@ -188,4 +192,59 @@ export class NavbarComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
+  exportPptx(): void {
+    const presentationId = this.route.snapshot.paramMap.get('id');
+    if (!presentationId) {
+      console.error("No presentation ID found.");
+      return;
+    }
+
+    this.presentationService.downloadPresentation(presentationId).subscribe({
+      next: (data) => this.generatePptx(data),
+      error: (err) => console.error("Error fetching presentation:", err),
+    });
+  }
+
+  generatePptx(data: any): void {
+    let ppt = new PptxGenJS();
+    
+    // Convert pixels to inches (PowerPoint default is inches)
+    const pxToIn = (px: number) => px / 96; // 96px = 1 inch in PPTX
+  
+    data.slides.forEach((slide: any) => {
+      let pptSlide = ppt.addSlide();
+  
+      slide.elements.forEach((element: any) => {
+        if (element.type === "TEXT") {
+          pptSlide.addText(element.content, {
+            x: pxToIn(element.x), 
+            y: pxToIn(element.y),
+            w: pxToIn(element.width),
+            h: pxToIn(element.height),
+            fontSize: element.style?.fontSize ? element.style.fontSize * 0.75 : 24, 
+            color: element.style?.color || "000000",
+            bold: element.style?.bold || false,
+            italic: element.style?.italic || false,
+            align: element.style?.align || "center", 
+            valign: element.style?.valign || "middle",
+            wrap: true, 
+            isTextBox: true, 
+            margin: [5, 5, 5, 5], 
+          });
+        } else if (element.type === "IMAGE") {
+          pptSlide.addImage({
+            path: element.content,
+            x: pxToIn(element.x),
+            y: pxToIn(element.y),
+            w: pxToIn(element.width),
+            h: pxToIn(element.height),
+          });
+        }
+      });
+    });
+  
+    ppt.writeFile({ fileName: "presentation.pptx" });
+  }
+  
 }
