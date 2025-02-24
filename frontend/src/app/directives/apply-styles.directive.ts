@@ -20,7 +20,12 @@ export class ApplyStylesDirective implements OnChanges {
       this.el.nativeElement.style.cssText = '';
       Object.entries(this.applyStyles).forEach(([key, value]) => {
         if (value != null) {
-          const cssKey = key === 'fontColor' ? 'color' : key;
+          let cssKey = key;
+          if (key === 'fontColor') {
+            cssKey = 'color';
+          } else if (key === 'fillColor') {
+            cssKey = 'background-color';
+          }
           this.renderer.setStyle(this.el.nativeElement, cssKey, value);
         }
       });

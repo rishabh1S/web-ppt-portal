@@ -39,7 +39,7 @@
             }">
                 <table class="w-full h-full border-collapse">
                     <tr *ngFor="let row of getTableContent(element); let i = index">
-                        <td *ngFor="let cell of row; let j = index" [ngStyle]="getTableCellStyle(element, i, j)">
+                        <td *ngFor="let cell of row; let j = index" [applyStyles]="getTableCellStyle(element, i, j)">
                             {{ cell }}
                         </td>
                     </tr>

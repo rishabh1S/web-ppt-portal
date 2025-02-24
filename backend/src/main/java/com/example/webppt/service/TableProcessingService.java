@@ -1,8 +1,7 @@
 package com.example.webppt.service;
 
 import com.example.webppt.model.*;
-import com.example.webppt.utils.ColorUtils;
-import com.example.webppt.utils.SlideElementUtils;
+import com.example.webppt.utils.*;
 import com.google.gson.Gson;
 
 import org.apache.poi.xslf.usermodel.*;
@@ -18,15 +17,17 @@ public class TableProcessingService {
     private SlideElementUtils slideElementUtils;
     @Autowired
     ColorUtils colorUtils;
+    @Autowired
+    StyleExtractionUtils styleExtractionUtils;
 
     public SlideElement processTable(XSLFTable table, Presentation presentation) {
         SlideElement element = slideElementUtils.createSlideElement(ElementType.TABLE, table, presentation);
 
-        // Extract table structure and content
-        List<List<String>> tableContent = new ArrayList<>();
-        Map<String, Object> tableStyle = new HashMap<>();
+        if (element.getStyle() == null) {
+            element.setStyle(new HashMap<>());
+        }
 
-        // Store cell styles in a nested structure
+        List<List<String>> tableContent = new ArrayList<>();
         List<List<Map<String, Object>>> cellStyles = new ArrayList<>();
 
         for (XSLFTableRow row : table.getRows()) {
@@ -34,35 +35,43 @@ public class TableProcessingService {
             List<Map<String, Object>> rowStyles = new ArrayList<>();
 
             for (XSLFTableCell cell : row.getCells()) {
-                // Extract cell text content
-                rowContent.add(cell.getText());
-
-                // Extract cell styling
                 Map<String, Object> cellStyle = new HashMap<>();
-                Color backgroundColor = cell.getFillColor();
-                cellStyle.put("backgroundColor",
-                        backgroundColor != null ? colorUtils.toHexColor(backgroundColor) : "transparent");
 
-                // Extract border colors (example for bottom border)
-                Color borderColor = cell.getBorderColor(XSLFTableCell.BorderEdge.bottom);
-                cellStyle.put("borderColor", borderColor != null ? colorUtils.toHexColor(borderColor) : "transparent");
+                // Extract cell-level styles
+                styleExtractionUtils.extractStyles(cell, cellStyle);
 
-                // Add cell style to row styles
+                // Extract text styles from cell content
+                extractTextStyles(cell, cellStyle);
+
+                // Manual border color fallback
+                addBorderColorFallback(cell, cellStyle);
+
+                rowContent.add(cell.getText());
                 rowStyles.add(cellStyle);
             }
 
-            // Add row content and styles to the table
             tableContent.add(rowContent);
             cellStyles.add(rowStyles);
         }
 
-        // Set table content in the `content` field
         element.setContent(new Gson().toJson(tableContent));
-
-        // Set table styles in the `style` field
-        tableStyle.put("cellStyles", cellStyles);
-        element.setStyle(tableStyle);
+        element.getStyle().put("cellStyles", cellStyles);
 
         return element;
     }
+
+    private void addBorderColorFallback(XSLFTableCell cell, Map<String, Object> styleMap) {
+        Color borderColor = cell.getBorderColor(XSLFTableCell.BorderEdge.bottom);
+        if (borderColor != null && !styleMap.containsKey("borderColor")) {
+            styleMap.put("borderColor", colorUtils.toHexColor(borderColor));
+        }
+    }
+
+    private void extractTextStyles(XSLFTableCell cell, Map<String, Object> styleMap) {
+        cell.getTextParagraphs().forEach(paragraph -> {
+            styleExtractionUtils.extractStyles(paragraph, styleMap);
+            paragraph.getTextRuns().forEach(textRun -> styleExtractionUtils.extractStyles(textRun, styleMap));
+        });
+    }
+
 }
