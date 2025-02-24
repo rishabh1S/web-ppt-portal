@@ -45,7 +45,7 @@ public class SlideElement {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private Map<String, Object> style; // { "fontSize": 14, "color": "#000000" }
+    private Map<String, Object> style;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "slide_id")

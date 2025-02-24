@@ -1,8 +1,6 @@
-<div *ngIf="selectedSlide; else noSlide" class="relative bg-background aspect-video rounded-md shadow-lg bg-white"
-    style="position: relative;">
+<div *ngIf="selectedSlide; else noSlide" class="relative aspect-video rounded-md shadow-lg bg-white">
     <div *ngFor="let element of selectedSlide.elements">
         <ng-container [ngSwitch]="element.type">
-            <!-- For text elements, render a quill editor with custom styles -->
             <div *ngSwitchCase="'TEXT'" class="absolute" [ngStyle]="{
            'left.%': element.x, 
            'top.%': element.y, 
@@ -12,7 +10,7 @@
                 <quill-editor [(ngModel)]="element.content" [modules]="quillModules"
                     (onSelectionChanged)="onSelectionChanged($event)"
                     (onEditorCreated)="setEditorFontSize($event, element.style.fontSize)" placeholder="Enter text"
-                    class="w-full h-full bg-white p-2 rounded" [style.color]="element.style.color">
+                    class="w-full h-auto" [applyStyles]="element.style">
                 </quill-editor>
             </div>
             <div *ngSwitchCase="'IMAGE'" class="absolute" [ngStyle]="{
@@ -24,14 +22,28 @@
                 <img [src]="element.content" alt="Slide Image" class="object-contain w-full h-full" />
             </div>
 
-            <!-- Optional: handling for SHAPE or other types -->
-            <div *ngSwitchDefault class="absolute" [ngStyle]="{
-           'left.%': element.x, 
-           'top.%': element.y, 
-           'width.%': element.width, 
-           'height.%': element.height
-         }">
-                <p>{{ element.content }}</p>
+            <div *ngSwitchCase="'SHAPE'">
+                <svg [attr.width]="element.width + '%'" [attr.height]="element.height + '%'" class="absolute"
+                    [ngStyle]="{ 'left.%': element.x, 'top.%': element.y }" viewBox="0 0 100 100"
+                    preserveAspectRatio="none">
+                    <path [attr.d]="element.content" [attr.fill]="element.style.fillColor"
+                        [attr.stroke]="element.style.strokeColor" [attr.stroke-width]="element.style.strokeWidth" />
+                </svg>
+            </div>
+
+            <div *ngSwitchCase="'TABLE'" class="absolute" [ngStyle]="{
+                'left.%': element.x, 
+                'top.%': element.y, 
+                'width.%': element.width, 
+                'height.%': element.height
+            }">
+                <table class="w-full h-full border-collapse">
+                    <tr *ngFor="let row of getTableContent(element); let i = index">
+                        <td *ngFor="let cell of row; let j = index" [applyStyles]="getTableCellStyle(element, i, j)">
+                            {{ cell }}
+                        </td>
+                    </tr>
+                </table>
             </div>
         </ng-container>
     </div>
