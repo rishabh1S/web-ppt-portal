@@ -33,7 +33,7 @@ public class ShapeProcessingService {
 
         // Generate SVG path data
         String svgPath = svgUtils.generateSVGPath(autoShape);
-        element.setContent(svgPath);
+        element.setContent(Map.of("svgPath", svgPath));
 
         // Extract style properties
         Map<String, Object> style = new HashMap<>();

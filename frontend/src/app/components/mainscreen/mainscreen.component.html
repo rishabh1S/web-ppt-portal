@@ -1,44 +1,46 @@
 <div *ngIf="selectedSlide; else noSlide" class="relative aspect-video rounded-md shadow-lg bg-white">
     <div *ngFor="let element of selectedSlide.elements">
         <ng-container [ngSwitch]="element.type">
+            <!-- TEXT ELEMENT -->
             <div *ngSwitchCase="'TEXT'" class="absolute" [ngStyle]="{
-           'left.%': element.x, 
-           'top.%': element.y, 
-           'width.%': element.width, 
-           'height.%': element.height
-         }">
-                <quill-editor [(ngModel)]="element.content" [modules]="quillModules"
+                'left.%': element.x, 
+                'top.%': element.y, 
+                'width.%': element.width, 
+                'height.%': element.height
+            }">
+                <quill-editor [(ngModel)]="element.content.text" [modules]="quillModules"
                     (onSelectionChanged)="onSelectionChanged($event)"
-                    (onEditorCreated)="setEditorFontSize($event, element.style.fontSize)" placeholder="Enter text"
+                    (onEditorCreated)="setEditorFontSize($event, element.style['fontSize'])" placeholder="Enter text"
                     class="w-full h-auto" [applyStyles]="element.style">
                 </quill-editor>
             </div>
+
+            <!-- IMAGE ELEMENT -->
             <div *ngSwitchCase="'IMAGE'" class="absolute" [ngStyle]="{
-           'left.%': element.x, 
-           'top.%': element.y, 
-           'width.%': element.width, 
-           'height.%': element.height
-         }">
-                <img [src]="element.content" alt="Slide Image" class="object-contain w-full h-full" />
+                'left.%': element.x, 
+                'top.%': element.y, 
+                'width.%': element.width, 
+                'height.%': element.height
+            }">
+                <img [src]="element.content.url" alt="Slide Image" class="object-contain w-full h-full" />
             </div>
 
+            <!-- SHAPE ELEMENT -->
             <div *ngSwitchCase="'SHAPE'">
                 <app-shape [shapeData]="element"></app-shape>
             </div>
 
+            <!-- TABLE ELEMENT -->
             <div *ngSwitchCase="'TABLE'" class="absolute" [ngStyle]="{
                 'left.%': element.x, 
                 'top.%': element.y, 
                 'width.%': element.width, 
                 'height.%': element.height
             }">
-                <table class="w-full h-full border-collapse">
-                    <tr *ngFor="let row of getTableContent(element); let i = index">
-                        <td *ngFor="let cell of row; let j = index" [applyStyles]="getTableCellStyle(element, i, j)">
-                            {{ cell }}
-                        </td>
-                    </tr>
-                </table>
+                <app-table [tableHeader]="element.content.tableHeader" [tableData]="element.content.tableData"
+                    [cellStyles]="element.style.cellStyles" [headerCellStyles]="element.style.headerCellStyles"
+                    [quillModules]="quillModules">
+                </app-table>
             </div>
         </ng-container>
     </div>

@@ -1,12 +1,19 @@
 export interface SlideElement {
   id: string;
   type: ElementType;
-  content: string;
+  content: {
+    text: string;
+    url: string;
+    svgPath: string;
+    tableData: string[][];
+    tableHeader: string[][];
+  };
   x: number;
   y: number;
   width: number;
   height: number;
   style: {
+    headerCellStyles: any;
     lineDash: string;
     lineCap: any;
     lineWidth: any;

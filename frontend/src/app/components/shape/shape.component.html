@@ -2,9 +2,8 @@
     'left.%': shapeData.x, 
     'top.%': shapeData.y
   }" viewBox="0 0 100 100" preserveAspectRatio="none">
-    <path [attr.d]="shapeData.content" [attr.fill]="shapeData.style?.fillColor || 'transparent'"
-        [attr.stroke]="shapeData.style?.lineColor || 'transparent'"
-        [attr.stroke-width]="shapeData.style?.lineWidth || 0"
-        [attr.stroke-dasharray]="shapeData.style?.lineDash === 'solid' ? 'none' : '5,5'"
-        [attr.stroke-linecap]="shapeData.style?.lineCap || 'butt'" />
+  <path [attr.d]="shapeData.content?.svgPath" [attr.fill]="shapeData.style?.fillColor || 'transparent'"
+    [attr.stroke]="shapeData.style?.lineColor || 'transparent'" [attr.stroke-width]="shapeData.style?.lineWidth || 0"
+    [attr.stroke-dasharray]="shapeData.style?.lineDash === 'solid' ? 'none' : '5,5'"
+    [attr.stroke-linecap]="shapeData.style?.lineCap || 'butt'" />
 </svg>

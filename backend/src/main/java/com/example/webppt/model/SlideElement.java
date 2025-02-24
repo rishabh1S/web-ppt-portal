@@ -7,7 +7,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,15 +32,16 @@ public class SlideElement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private ElementType type; // Enum: TEXT, IMAGE, SHAPE
+    private ElementType type;
 
-    @Column(columnDefinition = "TEXT")
-    private String content; // Text or image URL
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> content;
 
-    private double x; // X position (% of slide width)
-    private double y; // Y position (% of slide height)
-    private double width; // Width (% of slide)
-    private double height; // Height (% of slide)
+    private double x;
+    private double y;
+    private double width;
+    private double height;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")

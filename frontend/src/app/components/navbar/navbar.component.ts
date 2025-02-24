@@ -174,7 +174,7 @@ export class NavbarComponent implements OnDestroy {
     }
 
     const updateRequests = this.selectedSlide.elements.map((element) =>
-      this.presentationService.updateElement(element.id, element.content)
+      this.presentationService.updateElement(element.id, element.content.text)
     );
 
     forkJoin(updateRequests).subscribe({

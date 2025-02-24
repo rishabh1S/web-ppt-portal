@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Service
 public class ImageProcessingService {
@@ -21,7 +22,7 @@ public class ImageProcessingService {
 
         // Save image to storage and get the file path
         String imagePath = fileStorageService.storeImage(pictureShape.getPictureData().getData());
-        element.setContent(imagePath);
+        element.setContent(Map.of("url", imagePath));
 
         return element;
     }
