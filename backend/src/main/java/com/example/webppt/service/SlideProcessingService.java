@@ -25,9 +25,7 @@ public class SlideProcessingService {
         dbSlide.setPresentation(presentation);
 
         for (XSLFShape shape : slide.getShapes()) {
-            if (shape instanceof XSLFGroupShape) {
-                shapeProcessingService.processGroupShape((XSLFGroupShape) shape, dbSlide, presentation);
-            } else if (shape instanceof XSLFTable) {
+            if (shape instanceof XSLFTable) {
                 SlideElement element = tableProcessingService.processTable((XSLFTable) shape, presentation);
                 element.setSlide(dbSlide);
                 dbSlide.getElements().add(element);

@@ -23,12 +23,7 @@
             </div>
 
             <div *ngSwitchCase="'SHAPE'">
-                <svg [attr.width]="element.width + '%'" [attr.height]="element.height + '%'" class="absolute"
-                    [ngStyle]="{ 'left.%': element.x, 'top.%': element.y }" viewBox="0 0 100 100"
-                    preserveAspectRatio="none">
-                    <path [attr.d]="element.content" [attr.fill]="element.style.fillColor"
-                        [attr.stroke]="element.style.strokeColor" [attr.stroke-width]="element.style.strokeWidth" />
-                </svg>
+                <app-shape [shapeData]="element"></app-shape>
             </div>
 
             <div *ngSwitchCase="'TABLE'" class="absolute" [ngStyle]="{

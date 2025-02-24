@@ -7,6 +7,10 @@ export interface SlideElement {
   width: number;
   height: number;
   style: {
+    lineDash: string;
+    lineCap: any;
+    lineWidth: any;
+    lineColor: any;
     autoNumberingScheme: any;
     bullet: any;
     fontSize: number; // Font size in points

@@ -9,10 +9,17 @@ import Quill from 'quill';
 import { quillModules } from '../../../../utils/quill-config';
 import { SlideElement } from '../../model/SlideElements';
 import { ApplyStylesDirective } from '../../directives/apply-styles.directive';
+import { ShapeComponent } from '../shape/shape.component';
 
 @Component({
   selector: 'app-mainscreen',
-  imports: [CommonModule, FormsModule, QuillModule, ApplyStylesDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    QuillModule,
+    ApplyStylesDirective,
+    ShapeComponent,
+  ],
   templateUrl: './mainscreen.component.html',
 })
 export class MainscreenComponent {
