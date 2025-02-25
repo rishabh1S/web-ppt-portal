@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,5 +40,21 @@ public class PresentationController {
         return presentationRepo.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/download")
+    public ResponseEntity<ByteArrayResource> downloadPresentation(@PathVariable UUID id) {
+        try {
+            byte[] pptBytes = presentationService.generatePresentation(id);
+            ByteArrayResource resource = new ByteArrayResource(pptBytes);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=presentation.pptx")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentLength(pptBytes.length)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
     }
 }

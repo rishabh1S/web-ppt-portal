@@ -23,10 +23,10 @@ public class ElementController {
     @PatchMapping("/{id}")
     public ResponseEntity<SlideElement> updateText(
             @PathVariable UUID id,
-            @RequestBody Map<String, String> update) {
+            @RequestBody Map<String, Object> update) {
         return elementRepo.findById(id)
                 .map(element -> {
-                    element.setContent(update.get("content"));
+                    element.setContent(update);
                     return ResponseEntity.ok(elementRepo.save(element));
                 })
                 .orElse(ResponseEntity.notFound().build());

@@ -1,0 +1,19 @@
+<table class="w-full h-full border-collapse">
+    <thead>
+        <tr *ngFor="let headerRow of tableHeader; let i = index; trackBy: trackByRow">
+            <th *ngFor="let headerCell of headerRow; let j = index; trackBy: trackByCell"
+                [applyStyles]="getHeaderCellStyle(i, j)">
+                {{ headerCell }}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of tableData; let i = index; trackBy: trackByRow">
+            <td *ngFor="let cell of row; let j = index; trackBy: trackByCell" [applyStyles]="getCellStyle(i, j)">
+                <quill-editor [(ngModel)]="tableData[i][j]" [modules]="quillModules"
+                    (onContentChanged)="onCellTextChange(i, j, $event)" placeholder="..." class="w-full h-auto">
+                </quill-editor>
+            </td>
+        </tr>
+    </tbody>
+</table>

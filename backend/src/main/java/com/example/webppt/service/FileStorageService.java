@@ -26,4 +26,9 @@ public class FileStorageService {
         Files.write(targetPath, imageData);
         return targetPath.toString();
     }
+
+    public byte[] loadImage(String filePath) throws IOException {
+        Path path = Paths.get(uploadDir).resolve(Paths.get(filePath).getFileName());
+        return Files.readAllBytes(path);
+    }
 }

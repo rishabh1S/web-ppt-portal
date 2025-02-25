@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.Dimension;
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public class PresentationService {
@@ -23,6 +24,8 @@ public class PresentationService {
     SlideProcessingService slideProcessingService;
     @Autowired
     ColorUtils colorUtils;
+    @Autowired
+    PresentationGenerationService generationService;
 
     @Transactional
     public Presentation processPresentation(MultipartFile file) throws IOException {
@@ -51,5 +54,11 @@ public class PresentationService {
 
             return presentationRepo.save(presentation);
         }
+    }
+
+    public byte[] generatePresentation(UUID presentationId) throws IOException {
+        Presentation presentation = presentationRepo.findById(presentationId)
+                .orElseThrow(() -> new RuntimeException("Presentation not found"));
+        return generationService.generatePresentation(presentation);
     }
 }
