@@ -26,4 +26,5 @@ public class ImageProcessingService {
 
         return element;
     }
+
 }

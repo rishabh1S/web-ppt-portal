@@ -33,4 +33,14 @@ public class ColorUtils {
         }
         return null;
     }
+
+    public Color parseColor(String hexColor) {
+        if (hexColor == null || hexColor.isEmpty())
+            return null;
+        try {
+            return Color.decode(hexColor.startsWith("#") ? hexColor : "#" + hexColor);
+        } catch (NumberFormatException e) {
+            return Color.BLACK;
+        }
+    }
 }
