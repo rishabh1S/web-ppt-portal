@@ -61,6 +61,9 @@ public class SvgUtils {
     }
 
     public String getPresetShapeSVGPath(ShapeType shapeType) {
+        if (shapeType == null) {
+            return "M 0 0 H 100 V 100 H 0 Z";
+        }
         switch (shapeType) {
             case RECT:
                 return "M 0 0 H 100 V 100 H 0 Z";
