@@ -84,12 +84,4 @@ public class SvgUtils {
                 return "M 0 0 H 100 V 100 H 0 Z";
         }
     }
-
-    public Path2D svgPathToPath2D(String svgPath) {
-        Path2D.Double path = new Path2D.Double();
-        // Basic SVG path parser (implement full parser or use a library)
-        String[] commands = svgPath.split("\\s+");
-        // Implementation would parse commands and build path
-        return path;
-    }
 }
