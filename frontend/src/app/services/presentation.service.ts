@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Presentation } from '../model/Presentation';
@@ -35,7 +35,19 @@ export class PresentationService {
     });
   }
 
-  downloadPresentation(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/presentations/${id}`);
+  downloadPresentation(id: string): Observable<Blob> {
+    return this.http
+      .get(`${this.apiUrl}/presentations/${id}/download`, {
+        responseType: 'blob',
+        headers: new HttpHeaders({
+          'Content-Type': 'application/octet-stream',
+        }),
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Download error:', error);
+          return throwError(() => new Error('Failed to download presentation'));
+        })
+      );
   }
 }

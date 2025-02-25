@@ -84,10 +84,6 @@
             <artifactId>curvesapi</artifactId>
             <version>1.07</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
 
         <!-- Apache Commons IO -->
         <dependency>

@@ -2,13 +2,11 @@ package com.example.webppt.service;
 
 import com.example.webppt.model.*;
 import com.example.webppt.utils.*;
-import com.google.gson.Gson;
 
 import org.apache.poi.xslf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.Color;
 import java.util.*;
 
 @Service
@@ -22,56 +20,48 @@ public class TableProcessingService {
 
     public SlideElement processTable(XSLFTable table, Presentation presentation) {
         SlideElement element = slideElementUtils.createSlideElement(ElementType.TABLE, table, presentation);
+        element.setStyle(Optional.ofNullable(element.getStyle()).orElseGet(HashMap::new));
 
-        if (element.getStyle() == null) {
-            element.setStyle(new HashMap<>());
-        }
+        List<List<String>> tableHeader = new ArrayList<>(), tableData = new ArrayList<>();
+        List<List<Map<String, Object>>> headerCellStyles = new ArrayList<>(), cellStyles = new ArrayList<>();
 
-        List<List<String>> tableContent = new ArrayList<>();
-        List<List<Map<String, Object>>> cellStyles = new ArrayList<>();
-
+        boolean isHeader = true;
         for (XSLFTableRow row : table.getRows()) {
             List<String> rowContent = new ArrayList<>();
             List<Map<String, Object>> rowStyles = new ArrayList<>();
 
-            for (XSLFTableCell cell : row.getCells()) {
-                Map<String, Object> cellStyle = new HashMap<>();
-
-                // Extract cell-level styles
-                styleExtractionUtils.extractStyles(cell, cellStyle);
-
-                // Extract text styles from cell content
-                extractTextStyles(cell, cellStyle);
-
-                // Manual border color fallback
-                addBorderColorFallback(cell, cellStyle);
-
+            row.getCells().forEach(cell -> {
+                Map<String, Object> cellStyle = extractCellStyle(cell);
                 rowContent.add(cell.getText());
                 rowStyles.add(cellStyle);
-            }
+            });
 
-            tableContent.add(rowContent);
-            cellStyles.add(rowStyles);
+            if (isHeader) {
+                tableHeader.add(rowContent);
+                headerCellStyles.add(rowStyles);
+                isHeader = false;
+            } else {
+                tableData.add(rowContent);
+                cellStyles.add(rowStyles);
+            }
         }
 
-        element.setContent(new Gson().toJson(tableContent));
+        element.setContent(Map.of("tableHeader", tableHeader, "tableData", tableData));
+        element.getStyle().put("headerCellStyles", headerCellStyles);
         element.getStyle().put("cellStyles", cellStyles);
-
         return element;
     }
 
-    private void addBorderColorFallback(XSLFTableCell cell, Map<String, Object> styleMap) {
-        Color borderColor = cell.getBorderColor(XSLFTableCell.BorderEdge.bottom);
-        if (borderColor != null && !styleMap.containsKey("borderColor")) {
-            styleMap.put("borderColor", colorUtils.toHexColor(borderColor));
-        }
-    }
-
-    private void extractTextStyles(XSLFTableCell cell, Map<String, Object> styleMap) {
+    private Map<String, Object> extractCellStyle(XSLFTableCell cell) {
+        Map<String, Object> styleMap = new HashMap<>();
+        styleExtractionUtils.extractStyles(cell, styleMap);
         cell.getTextParagraphs().forEach(paragraph -> {
             styleExtractionUtils.extractStyles(paragraph, styleMap);
             paragraph.getTextRuns().forEach(textRun -> styleExtractionUtils.extractStyles(textRun, styleMap));
         });
+        Optional.ofNullable(cell.getBorderColor(XSLFTableCell.BorderEdge.bottom))
+                .ifPresent(borderColor -> styleMap.put("borderColor", colorUtils.toHexColor(borderColor)));
+        return styleMap;
     }
 
 }

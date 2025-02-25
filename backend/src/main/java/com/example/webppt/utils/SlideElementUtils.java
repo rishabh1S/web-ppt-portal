@@ -2,7 +2,10 @@ package com.example.webppt.utils;
 
 import com.example.webppt.model.*;
 import org.apache.poi.xslf.usermodel.XSLFShape;
+import org.apache.poi.xslf.usermodel.XSLFSimpleShape;
 import org.springframework.stereotype.Component;
+
+import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;
 
 @Component
@@ -25,5 +28,19 @@ public class SlideElementUtils {
 
     private double convertPointsToPercentage(double points, double totalPoints) {
         return (points / totalPoints) * 100;
+    }
+
+    public void applyPositionAndSize(XSLFShape shape, SlideElement element) {
+        Dimension pageSize = shape.getSheet().getSlideShow().getPageSize();
+        Rectangle2D anchor = new Rectangle2D.Double(
+                percentageToPoints(element.getX(), pageSize.getWidth()),
+                percentageToPoints(element.getY(), pageSize.getHeight()),
+                percentageToPoints(element.getWidth(), pageSize.getWidth()),
+                percentageToPoints(element.getHeight(), pageSize.getHeight()));
+        ((XSLFSimpleShape) shape).setAnchor(anchor);
+    }
+
+    private double percentageToPoints(double percentage, double totalPoints) {
+        return (percentage / 100.0) * totalPoints;
     }
 }

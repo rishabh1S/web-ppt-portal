@@ -22,7 +22,7 @@ public class TextProcessingService {
 
         // Extract text content
         XSLFTextShape textShape = getTextShape(shape);
-        element.setContent(textShape != null ? textShape.getText() : "");
+        element.setContent(Map.of("text", textShape != null ? textShape.getText() : ""));
 
         Map<String, Object> style = new HashMap<>();
         if (textShape != null) {
