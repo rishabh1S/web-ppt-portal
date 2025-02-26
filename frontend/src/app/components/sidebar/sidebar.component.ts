@@ -26,7 +26,7 @@ export class SidebarComponent {
   addSlide(): void {
     const newSlide: Slide = {
       id: uuidv4(),
-      elements: [],
+      htmlContent: '',
       annotations: [],
     };
     this.slideService.addSlide(newSlide);

@@ -19,16 +19,4 @@ public class FileStorageService {
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
         return targetPath.toString();
     }
-
-    public String storeImage(byte[] imageData) throws IOException {
-        String fileName = UUID.randomUUID() + ".png";
-        Path targetPath = Paths.get(uploadDir).resolve(fileName);
-        Files.write(targetPath, imageData);
-        return targetPath.toString();
-    }
-
-    public byte[] loadImage(String filePath) throws IOException {
-        Path path = Paths.get(uploadDir).resolve(Paths.get(filePath).getFileName());
-        return Files.readAllBytes(path);
-    }
 }

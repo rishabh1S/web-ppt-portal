@@ -35,8 +35,8 @@ public class Presentation {
 
     private String name;
     private String originalFilePath; // Path to uploaded PPTX
-    private double width; // Slide width in EMUs
-    private double height; // Slide height in EMUs
+    private double width;
+    private double height;
 
     @OneToMany(mappedBy = "presentation", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

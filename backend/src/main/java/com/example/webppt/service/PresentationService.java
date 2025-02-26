@@ -1,18 +1,19 @@
 package com.example.webppt.service;
 
-import com.example.webppt.model.*;
+import com.aspose.slides.ISlide;
+import com.aspose.slides.Presentation;
+import com.aspose.slides.SaveFormat;
+import com.example.webppt.model.Slide;
 import com.example.webppt.repository.PresentationRepository;
-import com.example.webppt.utils.ColorUtils;
 
-import org.apache.poi.xslf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.Dimension;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.UUID;
+import java.io.InputStream;
 
 @Service
 public class PresentationService {
@@ -20,45 +21,58 @@ public class PresentationService {
     PresentationRepository presentationRepo;
     @Autowired
     FileStorageService fileStorageService;
-    @Autowired
-    SlideProcessingService slideProcessingService;
-    @Autowired
-    ColorUtils colorUtils;
-    @Autowired
-    PresentationGenerationService generationService;
 
     @Transactional
-    public Presentation processPresentation(MultipartFile file) throws IOException {
-        // 1. Save original file
+    public com.example.webppt.model.Presentation processPresentation(MultipartFile file) throws IOException {
+        // 1. Save the original file
         String filePath = fileStorageService.storeFile(file);
 
-        // 2. Parse PPTX using Apache POI
-        try (XMLSlideShow slideShow = new XMLSlideShow(file.getInputStream())) {
-            Presentation presentation = new Presentation();
-            presentation.setOriginalFilePath(filePath);
+        // 2. Load the PPTX file using Aspose.Slides
+        Presentation asposePresentation = null;
+        try (InputStream inputStream = file.getInputStream()) {
+            asposePresentation = new Presentation(inputStream);
 
-            // Get slide dimensions
-            Dimension pageSize = slideShow.getPageSize();
-            presentation.setWidth(pageSize.getWidth()); // Width in points
-            presentation.setHeight(pageSize.getHeight()); // Height in points
+            // 3. Create a new model.Presentation entity
+            com.example.webppt.model.Presentation dbPresentation = new com.example.webppt.model.Presentation();
+            dbPresentation.setOriginalFilePath(filePath);
+            dbPresentation.setName(file.getOriginalFilename());
+            dbPresentation.setWidth(asposePresentation.getSlideSize().getSize().getWidth());
+            dbPresentation.setHeight(asposePresentation.getSlideSize().getSize().getHeight());
 
-            if (slideShow.getSlides().isEmpty()) {
+            if (asposePresentation.getSlides().size() == 0) {
                 throw new IOException("The PPTX file contains no slides.");
             }
 
-            // Process slides
-            for (XSLFSlide slide : slideShow.getSlides()) {
-                Slide dbSlide = slideProcessingService.processSlide(slide, presentation);
-                presentation.getSlides().add(dbSlide);
+            // 4. Convert each slide to HTML
+            int slideNumber = 1;
+            for (ISlide asposeSlide : asposePresentation.getSlides()) {
+                try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                    // Create a temporary presentation with only one slide
+                    Presentation tempPresentation = new Presentation();
+                    try {
+                        tempPresentation.getSlides().removeAt(0); // Remove default empty slide
+                        tempPresentation.getSlides().addClone(asposeSlide); // Add only the current slide
+                        tempPresentation.save(outputStream, SaveFormat.Html);
+                    } finally {
+                        tempPresentation.dispose(); // Close the temporary Aspose.Presentation
+                    }
+                    // Store extracted HTML as a string
+                    String htmlContent = outputStream.toString("UTF-8");
+
+                    // Create a new Slide entity and store the HTML
+                    Slide dbSlide = new Slide();
+                    dbSlide.setSlideNumber(slideNumber++);
+                    dbSlide.setHtmlContent(htmlContent);
+                    dbSlide.setPresentation(dbPresentation);
+                    dbPresentation.getSlides().add(dbSlide);
+                }
             }
-
-            return presentationRepo.save(presentation);
+            // 5. Save the presentation along with its slides
+            return presentationRepo.save(dbPresentation);
+        } finally {
+            if (asposePresentation != null) {
+                asposePresentation.dispose(); // Close the main Aspose.Presentation
+            }
         }
-    }
-
-    public byte[] generatePresentation(UUID presentationId) throws IOException {
-        Presentation presentation = presentationRepo.findById(presentationId)
-                .orElseThrow(() -> new RuntimeException("Presentation not found"));
-        return generationService.generatePresentation(presentation);
     }
 }

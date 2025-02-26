@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Presentation } from '../model/Presentation';
-import { SlideElement } from '../model/SlideElements';
 
 @Injectable({
   providedIn: 'root',
@@ -27,12 +26,6 @@ export class PresentationService {
 
   getPresentation(id: string): Observable<Presentation> {
     return this.http.get<Presentation>(`${this.apiUrl}/presentations/${id}`);
-  }
-
-  updateElement(id: string, content: string): Observable<SlideElement> {
-    return this.http.patch<SlideElement>(`${this.apiUrl}/elements/${id}`, {
-      content,
-    });
   }
 
   downloadPresentation(id: string): Observable<Blob> {

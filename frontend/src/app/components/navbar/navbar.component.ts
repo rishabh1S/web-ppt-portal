@@ -178,23 +178,23 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .catch((err) => console.error('Error copying URL:', err));
   }
 
-  onSave(): void {
-    if (!this.selectedSlide) {
-      console.warn('No slide selected to save.');
-      return;
-    }
+  // onSave(): void {
+  //   if (!this.selectedSlide) {
+  //     console.warn('No slide selected to save.');
+  //     return;
+  //   }
 
-    const updateRequests = this.selectedSlide.elements.map((element) =>
-      this.presentationService.updateElement(element.id, element.content.text)
-    );
+  //   const updateRequests = this.selectedSlide.elements.map((element) =>
+  //     this.presentationService.updateElement(element.id, element.content.text)
+  //   );
 
-    forkJoin(updateRequests).subscribe({
-      next: () => {
-        console.log('Slide updated successfully');
-      },
-      error: (err) => console.error('Error updating slide:', err),
-    });
-  }
+  //   forkJoin(updateRequests).subscribe({
+  //     next: () => {
+  //       console.log('Slide updated successfully');
+  //     },
+  //     error: (err) => console.error('Error updating slide:', err),
+  //   });
+  // }
 
   onDownload(): void {
     this.presentationService
