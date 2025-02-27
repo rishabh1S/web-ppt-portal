@@ -6,6 +6,12 @@ import com.aspose.slides.SaveFormat;
 import com.example.webppt.model.Slide;
 import com.example.webppt.repository.PresentationRepository;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +64,7 @@ public class PresentationService {
                     }
                     // Store extracted HTML as a string
                     String htmlContent = outputStream.toString("UTF-8");
+                    htmlContent = processHtml(htmlContent);
 
                     // Create a new Slide entity and store the HTML
                     Slide dbSlide = new Slide();
@@ -74,5 +81,22 @@ public class PresentationService {
                 asposePresentation.dispose(); // Close the main Aspose.Presentation
             }
         }
+    }
+
+    public static String processHtml(String html) {
+        // Parse HTML in XML mode to preserve SVG structure
+        Document doc = Jsoup.parse(html, "", Parser.xmlParser());
+        Elements tspans = doc.select("tspan");
+
+        for (Element tspan : tspans) {
+            String text = tspan.text().trim();
+            if (!text.isEmpty()) {
+                // Add editable attributes
+                tspan.attr("contenteditable", "true");
+            }
+        }
+
+        // Return processed HTML
+        return doc.toString();
     }
 }
