@@ -9,7 +9,7 @@ import org.apache.poi.sl.usermodel.ShapeType;
 @Component
 public class SvgUtils {
 
-    public String generateSVGPath(XSLFAutoShape autoShape) {
+    public static String generateSVGPath(XSLFAutoShape autoShape) {
         if (autoShape instanceof XSLFFreeformShape) {
             return convertFreeformShapeToSVG((XSLFFreeformShape) autoShape);
         } else {
@@ -17,7 +17,7 @@ public class SvgUtils {
         }
     }
 
-    public String convertFreeformShapeToSVG(XSLFFreeformShape freeformShape) {
+    public static String convertFreeformShapeToSVG(XSLFFreeformShape freeformShape) {
         Path2D path = freeformShape.getPath();
         java.awt.geom.Rectangle2D anchor = freeformShape.getAnchor();
 
@@ -29,7 +29,7 @@ public class SvgUtils {
         return convertPathIteratorToSVG(iterator);
     }
 
-    public String convertPathIteratorToSVG(PathIterator iterator) {
+    public static String convertPathIteratorToSVG(PathIterator iterator) {
         StringBuilder svgPath = new StringBuilder();
         double[] coords = new double[6];
         while (!iterator.isDone()) {
@@ -60,7 +60,7 @@ public class SvgUtils {
         return svgPath.toString().trim();
     }
 
-    public String getPresetShapeSVGPath(ShapeType shapeType) {
+    public static String getPresetShapeSVGPath(ShapeType shapeType) {
         if (shapeType == null) {
             return "M 0 0 H 100 V 100 H 0 Z";
         }

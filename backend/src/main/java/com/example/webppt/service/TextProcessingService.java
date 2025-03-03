@@ -5,20 +5,15 @@ import com.example.webppt.utils.SlideElementUtils;
 import com.example.webppt.utils.StyleExtractionUtils;
 
 import org.apache.poi.xslf.usermodel.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class TextProcessingService {
-    @Autowired
-    private SlideElementUtils slideElementUtils;
-    @Autowired
-    StyleExtractionUtils styleExtractionUtils;
 
     public SlideElement processTextShape(XSLFShape shape, Presentation presentation) {
-        SlideElement element = slideElementUtils.createSlideElement(ElementType.TEXT, shape, presentation);
+        SlideElement element = SlideElementUtils.createSlideElement(ElementType.TEXT, shape, presentation);
 
         // Extract text content
         XSLFTextShape textShape = getTextShape(shape);
@@ -27,8 +22,8 @@ public class TextProcessingService {
         Map<String, Object> style = new HashMap<>();
         if (textShape != null) {
             textShape.getTextParagraphs().forEach(paragraph -> {
-                styleExtractionUtils.extractStyles(paragraph, style);
-                paragraph.getTextRuns().forEach(textRun -> styleExtractionUtils.extractStyles(textRun, style));
+                StyleExtractionUtils.extractStyles(paragraph, style);
+                paragraph.getTextRuns().forEach(textRun -> StyleExtractionUtils.extractStyles(textRun, style));
             });
         }
 
