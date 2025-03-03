@@ -14,11 +14,9 @@ import java.util.Map;
 public class ImageProcessingService {
     @Autowired
     FileStorageService fileStorageService;
-    @Autowired
-    private SlideElementUtils slideElementUtils;
 
     public SlideElement processImage(XSLFPictureShape pictureShape, Presentation presentation) throws IOException {
-        SlideElement element = slideElementUtils.createSlideElement(ElementType.IMAGE, pictureShape, presentation);
+        SlideElement element = SlideElementUtils.createSlideElement(ElementType.IMAGE, pictureShape, presentation);
 
         // Save image to storage and get the file path
         String imagePath = fileStorageService.storeImage(pictureShape.getPictureData().getData());

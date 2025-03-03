@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ColorUtils {
 
-    public String toHexColor(Color color) {
+    public static String toHexColor(Color color) {
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    public String extractFontColor(XSLFTextRun textRun) {
+    public static String extractFontColor(XSLFTextRun textRun) {
         PaintStyle paintStyle = textRun.getFontColor();
         if (paintStyle instanceof SolidPaint) {
             SolidPaint solidPaint = (SolidPaint) paintStyle;
@@ -26,7 +26,7 @@ public class ColorUtils {
         return "#000000";
     }
 
-    public String extractPaintColor(PaintStyle paintStyle) {
+    public static String extractPaintColor(PaintStyle paintStyle) {
         if (paintStyle instanceof SolidPaint) {
             Color color = ((SolidPaint) paintStyle).getSolidColor().getColor();
             return toHexColor(color);
@@ -34,7 +34,7 @@ public class ColorUtils {
         return null;
     }
 
-    public Color parseColor(String hexColor) {
+    public static Color parseColor(String hexColor) {
         if (hexColor == null || hexColor.isEmpty())
             return null;
         try {

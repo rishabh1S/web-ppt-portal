@@ -16,8 +16,6 @@ import com.example.webppt.utils.SlideElementUtils;
 public class ImageGeneration {
     @Autowired
     FileStorageService fileStorageService;
-    @Autowired
-    SlideElementUtils slideElementUtils;
 
     public void addImage(XSLFSlide slide, SlideElement element) throws IOException {
         String imagePath = (String) element.getContent().get("url");
@@ -26,6 +24,6 @@ public class ImageGeneration {
         XSLFPictureShape picture = slide.createPicture(
                 slide.getSlideShow().addPicture(new ByteArrayInputStream(imageData), PictureData.PictureType.PNG));
 
-        slideElementUtils.applyPositionAndSize(picture, element);
+        SlideElementUtils.applyPositionAndSize(picture, element);
     }
 }
