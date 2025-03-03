@@ -1,8 +1,10 @@
 package com.example.webppt.service;
 
+import com.aspose.slides.IAutoShape;
 import com.aspose.slides.ISlide;
 import com.aspose.slides.Presentation;
 import com.aspose.slides.SaveFormat;
+import com.aspose.slides.ShapeType;
 import com.example.webppt.model.Slide;
 import com.example.webppt.repository.PresentationRepository;
 
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 @Service
 public class PresentationService {
@@ -75,4 +78,35 @@ public class PresentationService {
             }
         }
     }
+
+    public byte[] generatePPTFromHtml(UUID id) {
+    com.example.webppt.model.Presentation dbPresentation = presentationRepo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Presentation not found"));
+
+    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        Presentation ppt = new Presentation(); // Create a new Aspose PPTX
+
+        for (Slide dbSlide : dbPresentation.getSlides()) {
+            ISlide slide = ppt.getSlides().addEmptySlide(ppt.getLayoutSlides().get_Item(0));
+
+            // Add a text box to hold the HTML content
+            IAutoShape textBox = slide.getShapes().addAutoShape(ShapeType.Rectangle, 50, 50, 600, 400);
+            textBox.getTextFrame().setText(stripHtmlTags(dbSlide.getHtmlContent()));
+        }
+
+        ppt.save(outputStream, SaveFormat.Pptx);
+        return outputStream.toByteArray();
+    } catch (IOException e) {
+        throw new RuntimeException("Failed to generate PPT", e);
+    }
+}
+
+/**
+ * Helper method to remove HTML tags from the content.
+ */
+private String stripHtmlTags(String htmlContent) {
+    return htmlContent.replaceAll("<[^>]*>", ""); // Basic HTML stripping
+}
+
+
 }

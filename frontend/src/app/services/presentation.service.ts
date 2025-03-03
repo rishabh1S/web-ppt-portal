@@ -8,6 +8,7 @@ import { Presentation } from '../model/Presentation';
 })
 export class PresentationService {
   private apiUrl = 'http://localhost:8080/api';
+  private currentPresentationId: string | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -30,7 +31,7 @@ export class PresentationService {
 
   downloadPresentation(id: string): Observable<Blob> {
     return this.http
-      .get(`${this.apiUrl}/presentations/${id}/download`, {
+      .get(`${this.apiUrl}/presentations/${id}/export`, {
         responseType: 'blob',
         headers: new HttpHeaders({
           'Content-Type': 'application/octet-stream',
@@ -42,5 +43,18 @@ export class PresentationService {
           return throwError(() => new Error('Failed to download presentation'));
         })
       );
+  }
+
+  exportPresentation(id: string): Observable<Blob> {
+    return this.http.get(`/api/presentations/${id}/export`, { responseType: 'blob' });
+    
+  }
+
+  setCurrentPresentationId(id: string) {
+    this.currentPresentationId = id;
+  }
+
+  getCurrentPresentationId(): string {
+    return this.currentPresentationId || ''; // Return empty string if null
   }
 }

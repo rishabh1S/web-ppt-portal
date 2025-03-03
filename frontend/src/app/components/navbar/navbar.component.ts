@@ -26,6 +26,7 @@ import { EditorService } from '../../services/editor.service';
 import { PresentationService } from '../../services/presentation.service';
 import { ActivatedRoute } from '@angular/router';
 import { fontSizes } from '../../../../utils/quill-config';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-navbar',
@@ -68,7 +69,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private slideService: SlideService,
     private presentationService: PresentationService,
     private editorService: EditorService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private http: HttpClient
   ) {
     this.subscription = this.slideService.selectedSlide$.subscribe(
       (slide) => (this.selectedSlide = slide)
@@ -223,4 +225,31 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
+  exportPresentation() {
+
+    this.presentationService.downloadPresentation(this.presentationId).subscribe(
+      (blob) => {
+        console.log('Downloaded PPTX Blob Size:', blob.size);
+
+        if (blob.size < 500) {
+          console.error('File is too small, something went wrong.');
+          return;
+        }
+
+        const blobUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = 'presentation.pptx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(blobUrl);
+      },
+      (error) => {
+        console.error('Error downloading the presentation:', error);
+      }
+    );
+  }
+  
 }
