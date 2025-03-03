@@ -13,6 +13,18 @@ public class FileStorageService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    public FileStorageService(@Value("${file.upload-dir}") String uploadDir) {
+        this.uploadDir = uploadDir;
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            try {
+                Files.createDirectories(uploadPath);
+            } catch (IOException e) {
+                throw new RuntimeException("Could not create upload directory: " + uploadDir, e);
+            }
+        }
+    }
+
     public String storeFile(MultipartFile file) throws IOException {
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         Path targetPath = Paths.get(uploadDir).resolve(fileName);
