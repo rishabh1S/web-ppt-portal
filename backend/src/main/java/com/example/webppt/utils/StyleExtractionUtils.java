@@ -11,9 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StyleExtractionUtils {
-    private ColorUtils colorUtils = new ColorUtils();
 
-    private boolean isSimpleType(Object value) {
+    private static boolean isSimpleType(Object value) {
         return value instanceof String ||
                 value instanceof Number ||
                 value instanceof Boolean ||
@@ -22,7 +21,7 @@ public class StyleExtractionUtils {
                 value instanceof Enum;
     }
 
-    private boolean isStyleGetter(Method method) {
+    private static boolean isStyleGetter(Method method) {
         int mod = method.getModifiers();
         return Modifier.isPublic(mod) &&
                 !Modifier.isStatic(mod) &&
@@ -33,18 +32,18 @@ public class StyleExtractionUtils {
                 !method.getName().equals("getTextRuns");
     }
 
-    private String getStyleKey(Method method) {
+    private static String getStyleKey(Method method) {
         String name = method.getName();
         name = name.replaceAll("^(get|is)", "");
         return Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
 
-    private Object convertSpecialTypes(Object value) {
+    private static Object convertSpecialTypes(Object value) {
         if (value instanceof Color) {
-            return colorUtils.toHexColor((Color) value);
+            return ColorUtils.toHexColor((Color) value);
         }
         if (value instanceof PaintStyle) {
-            return colorUtils.extractPaintColor((PaintStyle) value);
+            return ColorUtils.extractPaintColor((PaintStyle) value);
         }
         if (value instanceof Enum) {
             return ((Enum<?>) value).name().toLowerCase();
@@ -52,7 +51,7 @@ public class StyleExtractionUtils {
         return value;
     }
 
-    public void extractStyles(Object styleObject, Map<String, Object> styleMap) {
+    public static void extractStyles(Object styleObject, Map<String, Object> styleMap) {
         try {
             for (Method method : styleObject.getClass().getMethods()) {
                 if (isStyleGetter(method)) {

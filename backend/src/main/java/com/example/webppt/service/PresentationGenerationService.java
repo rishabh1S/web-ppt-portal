@@ -1,9 +1,6 @@
 package com.example.webppt.service;
 
 import com.example.webppt.model.*;
-import com.example.webppt.utils.ColorUtils;
-import com.example.webppt.utils.SlideElementUtils;
-import com.example.webppt.utils.SvgUtils;
 import org.apache.poi.xslf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +15,6 @@ public class PresentationGenerationService {
 
     @Autowired
     FileStorageService fileStorageService;
-    @Autowired
-    SlideElementUtils slideElementUtils;
-    @Autowired
-    ColorUtils colorUtils;
-    @Autowired
-    SvgUtils svgUtils;
     @Autowired
     TextGeneration textGeneration;
     @Autowired

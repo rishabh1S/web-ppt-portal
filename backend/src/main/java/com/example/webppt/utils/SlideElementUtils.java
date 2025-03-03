@@ -11,14 +11,14 @@ import java.awt.geom.Rectangle2D;
 @Component
 public class SlideElementUtils {
 
-    public SlideElement createSlideElement(ElementType type, XSLFShape shape, Presentation presentation) {
+    public static SlideElement createSlideElement(ElementType type, XSLFShape shape, Presentation presentation) {
         SlideElement element = new SlideElement();
         element.setType(type);
         setPositionAndSize(element, shape, presentation);
         return element;
     }
 
-    public void setPositionAndSize(SlideElement element, XSLFShape shape, Presentation presentation) {
+    public static void setPositionAndSize(SlideElement element, XSLFShape shape, Presentation presentation) {
         Rectangle2D anchor = shape.getAnchor();
         element.setX(convertPointsToPercentage(anchor.getX(), presentation.getWidth()));
         element.setY(convertPointsToPercentage(anchor.getY(), presentation.getHeight()));
@@ -26,11 +26,11 @@ public class SlideElementUtils {
         element.setHeight(convertPointsToPercentage(anchor.getHeight(), presentation.getHeight()));
     }
 
-    private double convertPointsToPercentage(double points, double totalPoints) {
+    private static double convertPointsToPercentage(double points, double totalPoints) {
         return (points / totalPoints) * 100;
     }
 
-    public void applyPositionAndSize(XSLFShape shape, SlideElement element) {
+    public static void applyPositionAndSize(XSLFShape shape, SlideElement element) {
         Dimension pageSize = shape.getSheet().getSlideShow().getPageSize();
         Rectangle2D anchor = new Rectangle2D.Double(
                 percentageToPoints(element.getX(), pageSize.getWidth()),
@@ -40,7 +40,7 @@ public class SlideElementUtils {
         ((XSLFSimpleShape) shape).setAnchor(anchor);
     }
 
-    private double percentageToPoints(double percentage, double totalPoints) {
+    private static double percentageToPoints(double percentage, double totalPoints) {
         return (percentage / 100.0) * totalPoints;
     }
 }

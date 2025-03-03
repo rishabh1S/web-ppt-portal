@@ -4,22 +4,15 @@ import com.example.webppt.model.*;
 import com.example.webppt.utils.*;
 
 import org.apache.poi.xslf.usermodel.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class TableProcessingService {
-    @Autowired
-    private SlideElementUtils slideElementUtils;
-    @Autowired
-    ColorUtils colorUtils;
-    @Autowired
-    StyleExtractionUtils styleExtractionUtils;
 
     public SlideElement processTable(XSLFTable table, Presentation presentation) {
-        SlideElement element = slideElementUtils.createSlideElement(ElementType.TABLE, table, presentation);
+        SlideElement element = SlideElementUtils.createSlideElement(ElementType.TABLE, table, presentation);
         element.setStyle(Optional.ofNullable(element.getStyle()).orElseGet(HashMap::new));
 
         List<List<String>> tableHeader = new ArrayList<>(), tableData = new ArrayList<>();
@@ -54,13 +47,13 @@ public class TableProcessingService {
 
     private Map<String, Object> extractCellStyle(XSLFTableCell cell) {
         Map<String, Object> styleMap = new HashMap<>();
-        styleExtractionUtils.extractStyles(cell, styleMap);
+        StyleExtractionUtils.extractStyles(cell, styleMap);
         cell.getTextParagraphs().forEach(paragraph -> {
-            styleExtractionUtils.extractStyles(paragraph, styleMap);
-            paragraph.getTextRuns().forEach(textRun -> styleExtractionUtils.extractStyles(textRun, styleMap));
+            StyleExtractionUtils.extractStyles(paragraph, styleMap);
+            paragraph.getTextRuns().forEach(textRun -> StyleExtractionUtils.extractStyles(textRun, styleMap));
         });
         Optional.ofNullable(cell.getBorderColor(XSLFTableCell.BorderEdge.bottom))
-                .ifPresent(borderColor -> styleMap.put("borderColor", colorUtils.toHexColor(borderColor)));
+                .ifPresent(borderColor -> styleMap.put("borderColor", ColorUtils.toHexColor(borderColor)));
         return styleMap;
     }
 

@@ -2,7 +2,6 @@ package com.example.webppt.service;
 
 import com.example.webppt.model.*;
 import com.example.webppt.repository.PresentationRepository;
-import com.example.webppt.utils.ColorUtils;
 
 import org.apache.poi.xslf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,6 @@ public class PresentationService {
     FileStorageService fileStorageService;
     @Autowired
     SlideProcessingService slideProcessingService;
-    @Autowired
-    ColorUtils colorUtils;
     @Autowired
     PresentationGenerationService generationService;
 
