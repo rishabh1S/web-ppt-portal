@@ -3,12 +3,17 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Presentation } from '../model/Presentation';
 import { SlideElement } from '../model/SlideElements';
+import { tap } from 'rxjs/operators';
+import { Slide } from '../model/Slide';
+
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class PresentationService {
   private apiUrl = 'http://localhost:8080/api';
+
 
   constructor(private http: HttpClient) {}
 
@@ -50,4 +55,20 @@ export class PresentationService {
         })
       );
   }
+
+  updateSlide(updatedSlide: Slide): Observable<Slide> {
+    return this.http.patch<Slide>(
+      `${this.apiUrl}/elements/${updatedSlide.id}`, 
+      updatedSlide
+    ).pipe(
+      tap(() => console.log(`Slide ${updatedSlide.id} updated successfully`)),
+      catchError((error) => {
+        console.error('Error updating slide:', error);
+        return throwError(() => new Error('Failed to update slide'));
+      })
+    );
+  }
+  
+
+
 }
