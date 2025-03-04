@@ -69,6 +69,13 @@ export class PresentationService {
     );
   }
   
+  getImageUrl(url: string): string {
+    if (!url) return '';
 
+    if (/^(https?:\/\/)/i.test(url)) return url;
 
+    const fileName = url.split(/[/\\]/).pop() || '';
+    return `${this.apiUrl}/uploads/${fileName}`;
+  }
 }
+

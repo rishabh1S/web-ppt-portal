@@ -10,6 +10,7 @@ import { quillModules } from '../../../../utils/quill-config';
 import { ApplyStylesDirective } from '../../directives/apply-styles.directive';
 import { ShapeComponent } from '../shape/shape.component';
 import { TableComponent } from '../table/table.component';
+import { PresentationService } from '../../services/presentation.service';
 
 @Component({
   selector: 'app-mainscreen',
@@ -30,7 +31,8 @@ export class MainscreenComponent {
 
   constructor(
     private slideService: SlideService,
-    private editorService: EditorService
+    private editorService: EditorService,
+    private presentationService: PresentationService
   ) {
     this.slideService.selectedSlide$.subscribe((slide) => {
       this.selectedSlide = slide ? { ...slide } : null;
@@ -55,5 +57,9 @@ export class MainscreenComponent {
     if (editorElem && fontSize) {
       editorElem.style.fontSize = fontSize + 'px';
     }
+  }
+
+  getImageUrl(url: string): string {
+    return this.presentationService.getImageUrl(url);
   }
 }
