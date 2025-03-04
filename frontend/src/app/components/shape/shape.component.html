@@ -5,5 +5,5 @@
   <path [attr.d]="shapeData.content?.svgPath" [attr.fill]="shapeData.style?.fillColor || 'transparent'"
     [attr.stroke]="shapeData.style?.lineColor || 'transparent'" [attr.stroke-width]="shapeData.style?.lineWidth || 0"
     [attr.stroke-dasharray]="shapeData.style?.lineDash === 'solid' ? 'none' : '5,5'"
-    [attr.stroke-linecap]="shapeData.style?.lineCap || 'butt'" />
+    [attr.stroke-linecap]="shapeData.style?.lineCap || 'butt'" [attr.vector-effect]="'non-scaling-stroke'" />
 </svg>
