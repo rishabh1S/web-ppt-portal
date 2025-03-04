@@ -26,7 +26,6 @@ import { EditorService } from '../../services/editor.service';
 import { PresentationService } from '../../services/presentation.service';
 import { ActivatedRoute } from '@angular/router';
 import { fontSizes } from '../../../../utils/quill-config';
-import PptxGenJS from "pptxgenjs";
 
 @Component({
   selector: 'app-navbar',
@@ -179,59 +178,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .catch((err) => console.error('Error copying URL:', err));
   }
 
-  onSave(): void {
-    if (!this.selectedSlide) {
-      console.warn('No slide selected to save.');
-      return;
-    }
-  
-    const updatedSlide = {
-      id: this.selectedSlide.id,
-      slideNumber: this.selectedSlide.slideNumber,
-      elements: this.selectedSlide.elements.map((element) => ({
-        id: element.id || this.generateUUID(),
-        type: element.type, // Ensure ElementType is included
-        content: {
-          text: element.content?.text || '',
-          url: element.content?.url || '',
-          svgPath: element.content?.svgPath || '',
-          tableData: element.content?.tableData || [],
-          tableHeader: element.content?.tableHeader || []
-        },
-        x: element.x || 0,
-        y: element.y || 0,
-        width: element.width || 100, // Default width
-        height: element.height || 100, // Default height
-        style: {
-          ...element.style,
-          lineDash: '', // Reset unwanted dashed lines
-
-          backgroundImage: null, // Remove unnecessary SVG backgrounds
-        },
-      })),
-      annotations: this.selectedSlide.annotations || [] // Ensure annotations are included
-    };
-  
-    // Call service to update the slide in the database
-    this.presentationService.updateSlide(updatedSlide).subscribe({
-      next: () => {
-        console.log('Slide saved successfully');
-      },
-      error: (err) => console.error('Error saving slide:', err),
-    });
-  }
-
-  generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      const r = (Math.random() * 16) | 0;
-      const v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  }
-  
-  
-  
-
   onDownload(): void {
     this.presentationService
       .downloadPresentation(this.presentationId)
@@ -245,15 +191,66 @@ export class NavbarComponent implements OnInit, OnDestroy {
           document.body.appendChild(a);
           a.click();
 
-          // Cleanup
           window.URL.revokeObjectURL(url);
           document.body.removeChild(a);
         },
         error: (err) => {
           console.error('Download failed:', err);
-          // Add error handling UI feedback here
         },
       });
+  }
+
+  onSave(): void {
+    if (!this.selectedSlide) {
+      console.warn('No slide selected to save.');
+      return;
+    }
+
+    const updatedSlide = {
+      id: this.selectedSlide.id,
+      slideNumber: this.selectedSlide.slideNumber,
+      elements: this.selectedSlide.elements.map((element) => ({
+        id: element.id || this.generateUUID(),
+        type: element.type, // Ensure ElementType is included
+        content: {
+          text: element.content?.text || '',
+          url: element.content?.url || '',
+          svgPath: element.content?.svgPath || '',
+          tableData: element.content?.tableData || [],
+          tableHeader: element.content?.tableHeader || [],
+        },
+        x: element.x || 0,
+        y: element.y || 0,
+        width: element.width || 100, // Default width
+        height: element.height || 100, // Default height
+        style: {
+          ...element.style,
+          lineDash: '', // Reset unwanted dashed lines
+
+          backgroundImage: null, // Remove unnecessary SVG backgrounds
+        },
+      })),
+      annotations: this.selectedSlide.annotations || [], // Ensure annotations are included
+    };
+
+    // Call service to update the slide in the database
+    this.presentationService.updateSlide(updatedSlide).subscribe({
+      next: () => {
+        console.log('Slide saved successfully');
+      },
+      error: (err) => console.error('Error saving slide:', err),
+    });
+  }
+
+  generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 
   ngOnDestroy(): void {
