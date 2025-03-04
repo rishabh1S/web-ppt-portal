@@ -23,7 +23,7 @@ public class FileStorageService {
                 throw new RuntimeException("Could not create upload directory: " + uploadDir, e);
             }
         }
-    }
+    } 
 
     public String storeFile(MultipartFile file) throws IOException {
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
