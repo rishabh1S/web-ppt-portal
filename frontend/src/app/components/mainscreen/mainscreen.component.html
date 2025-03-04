@@ -10,7 +10,7 @@
             }">
                 <quill-editor [(ngModel)]="element.content.text" [modules]="quillModules"
                     (onSelectionChanged)="onSelectionChanged($event)"
-                    (onEditorCreated)="setEditorFontSize($event, element.style['fontSize'])" placeholder="Enter text"
+                    (onEditorCreated)="onEditorInitialized($event, element.style['fontSize'])" placeholder="Enter text"
                     class="w-full h-auto" [applyStyles]="element.style">
                 </quill-editor>
             </div>

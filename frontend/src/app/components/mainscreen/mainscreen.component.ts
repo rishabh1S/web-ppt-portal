@@ -52,10 +52,17 @@ export class MainscreenComponent {
     }
   }
 
-  setEditorFontSize(editor: Quill, fontSize: number): void {
+  onEditorInitialized(editor: Quill, fontSize: number): void {
     const editorElem = editor.root;
-    if (editorElem && fontSize) {
-      editorElem.style.fontSize = fontSize + 'px';
+    if (editorElem) {
+      // Set font size on the editor's content
+      if (fontSize) {
+        editorElem.style.fontSize = fontSize + 'px';
+      }
+      // const containerElem = editorElem.parentElement;
+      // if (containerElem) {
+      //   containerElem.style.border = 'none';
+      // }
     }
   }
 
