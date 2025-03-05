@@ -25,31 +25,40 @@ public class SlideProcessingService {
         dbSlide.setPresentation(presentation);
 
         for (XSLFShape shape : slide.getShapes()) {
-            if (shape instanceof XSLFTable) {
-                SlideElement element = tableProcessingService.processTable((XSLFTable) shape, presentation);
-                element.setSlide(dbSlide);
-                dbSlide.getElements().add(element);
-            } else if (shape instanceof XSLFPictureShape) {
-                SlideElement element = imageProcessingService.processImage((XSLFPictureShape) shape, presentation);
-                element.setSlide(dbSlide);
-                dbSlide.getElements().add(element);
-            } else if (shape instanceof XSLFAutoShape) {
-                XSLFAutoShape autoShape = (XSLFAutoShape) shape;
-                SlideElement shapeElement = shapeProcessingService.processAutoShape(autoShape, presentation);
-                shapeElement.setSlide(dbSlide);
-                dbSlide.getElements().add(shapeElement);
-
-                if (!autoShape.getText().isEmpty()) {
-                    SlideElement textElement = textProcessingService.processTextShape(autoShape, presentation);
-                    textElement.setSlide(dbSlide);
-                    dbSlide.getElements().add(textElement);
-                }
-            } else if (shape instanceof XSLFTextShape) {
-                SlideElement element = textProcessingService.processTextShape((XSLFTextShape) shape, presentation);
-                element.setSlide(dbSlide);
-                dbSlide.getElements().add(element);
-            }
+            processShape(shape, dbSlide, presentation);
         }
         return dbSlide;
+    }
+
+    private void processShape(XSLFShape shape, Slide dbSlide, Presentation presentation) throws IOException {
+        if (shape instanceof XSLFGroupShape) {
+            XSLFGroupShape groupShape = (XSLFGroupShape) shape;
+            for (XSLFShape childShape : groupShape.getShapes()) {
+                processShape(childShape, dbSlide, presentation);
+            }
+        } else if (shape instanceof XSLFTable) {
+            SlideElement element = tableProcessingService.processTable((XSLFTable) shape, presentation);
+            element.setSlide(dbSlide);
+            dbSlide.getElements().add(element);
+        } else if (shape instanceof XSLFPictureShape) {
+            SlideElement element = imageProcessingService.processImage((XSLFPictureShape) shape, presentation);
+            element.setSlide(dbSlide);
+            dbSlide.getElements().add(element);
+        } else if (shape instanceof XSLFAutoShape) {
+            XSLFAutoShape autoShape = (XSLFAutoShape) shape;
+            SlideElement shapeElement = shapeProcessingService.processAutoShape(autoShape, presentation);
+            shapeElement.setSlide(dbSlide);
+            dbSlide.getElements().add(shapeElement);
+
+            if (!autoShape.getText().isEmpty()) {
+                SlideElement textElement = textProcessingService.processTextShape(autoShape, presentation);
+                textElement.setSlide(dbSlide);
+                dbSlide.getElements().add(textElement);
+            }
+        } else if (shape instanceof XSLFTextShape) {
+            SlideElement element = textProcessingService.processTextShape((XSLFTextShape) shape, presentation);
+            element.setSlide(dbSlide);
+            dbSlide.getElements().add(element);
+        }
     }
 }

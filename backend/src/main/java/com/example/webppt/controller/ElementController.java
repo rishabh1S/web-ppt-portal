@@ -10,15 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
-
 @RestController
 @RequestMapping("/api/elements")
 public class ElementController {
 
-
     @Autowired
     private SlideRepository slideRepository;
+
 
     @PatchMapping("/batch-update")
 public ResponseEntity<List<Slide>> updateSlides(@RequestBody List<Slide> updatedSlides) {
@@ -60,6 +58,4 @@ public ResponseEntity<List<Slide>> updateSlides(@RequestBody List<Slide> updated
     }
     return ResponseEntity.ok(savedSlides);
 }
-
 }
-

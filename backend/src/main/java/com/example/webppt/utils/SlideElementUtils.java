@@ -3,6 +3,7 @@ package com.example.webppt.utils;
 import com.example.webppt.model.*;
 import org.apache.poi.xslf.usermodel.XSLFShape;
 import org.apache.poi.xslf.usermodel.XSLFSimpleShape;
+import org.apache.poi.xslf.usermodel.XSLFGroupShape;
 import org.springframework.stereotype.Component;
 
 import java.awt.Dimension;
@@ -30,6 +31,10 @@ public class SlideElementUtils {
         return (points / totalPoints) * 100;
     }
 
+    private static double percentageToPoints(double percentage, double totalPoints) {
+        return (percentage / 100) * totalPoints;
+    }
+
     public static void applyPositionAndSize(XSLFShape shape, SlideElement element) {
         Dimension pageSize = shape.getSheet().getSlideShow().getPageSize();
         Rectangle2D anchor = new Rectangle2D.Double(
@@ -37,10 +42,14 @@ public class SlideElementUtils {
                 percentageToPoints(element.getY(), pageSize.getHeight()),
                 percentageToPoints(element.getWidth(), pageSize.getWidth()),
                 percentageToPoints(element.getHeight(), pageSize.getHeight()));
-        ((XSLFSimpleShape) shape).setAnchor(anchor);
-    }
 
-    private static double percentageToPoints(double percentage, double totalPoints) {
-        return (percentage / 100.0) * totalPoints;
+        if (shape instanceof XSLFSimpleShape) {
+            ((XSLFSimpleShape) shape).setAnchor(anchor);
+        } else if (shape instanceof XSLFGroupShape) {
+            ((XSLFGroupShape) shape).setAnchor(anchor);
+        } else {
+            System.err
+                    .println("Warning: Unsupported shape type for setting anchor: " + shape.getClass().getSimpleName());
+        }
     }
 }

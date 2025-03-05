@@ -8,7 +8,6 @@ import com.example.webppt.utils.StyleExtractionUtils;
 import com.example.webppt.utils.SvgUtils;
 
 import org.apache.poi.xslf.usermodel.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -16,8 +15,6 @@ import java.util.Map;
 
 @Service
 public class ShapeProcessingService {
-    @Autowired
-    TextProcessingService textProcessingService;
 
     public SlideElement processAutoShape(XSLFAutoShape autoShape, Presentation presentation) {
         SlideElement element = SlideElementUtils.createSlideElement(ElementType.SHAPE, autoShape, presentation);
