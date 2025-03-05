@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.webppt.exceptions.ResourceNotFoundException;
 import com.example.webppt.model.Presentation;
+import com.example.webppt.model.DTO.PresentationUpdateDTO;
 import com.example.webppt.repository.PresentationRepository;
 import com.example.webppt.service.PresentationService;
 
@@ -40,6 +42,20 @@ public class PresentationController {
         return presentationRepo.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{presentationId}")
+    public ResponseEntity<?> updatePresentation(
+            @PathVariable UUID presentationId,
+            @RequestBody PresentationUpdateDTO updateDTO) {
+        try {
+            presentationService.processBatchUpdate(presentationId, updateDTO);
+            return ResponseEntity.ok().build();
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().body(ex.getMessage());
+        }
     }
 
     @GetMapping("/{id}/download")

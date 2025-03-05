@@ -2,18 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Presentation } from '../model/Presentation';
-import { SlideElement } from '../model/SlideElements';
-import { tap } from 'rxjs/operators';
-import { Slide } from '../model/Slide';
-
-
 
 @Injectable({
   providedIn: 'root',
 })
 export class PresentationService {
   private apiUrl = 'http://localhost:8080/api';
-
 
   constructor(private http: HttpClient) {}
 
@@ -34,12 +28,6 @@ export class PresentationService {
     return this.http.get<Presentation>(`${this.apiUrl}/presentations/${id}`);
   }
 
-  updateElement(id: string, content: string): Observable<SlideElement> {
-    return this.http.patch<SlideElement>(`${this.apiUrl}/elements/${id}`, {
-      content,
-    });
-  }
-
   downloadPresentation(id: string): Observable<Blob> {
     return this.http
       .get(`${this.apiUrl}/presentations/${id}/download`, {
@@ -56,16 +44,6 @@ export class PresentationService {
       );
   }
 
-  updateSlides(updatedSlides: Slide[]): Observable<Slide[]> {
-    return this.http.patch<Slide[]>(`${this.apiUrl}/elements/batch-update`, updatedSlides).pipe(
-      tap(() => console.log('Slides updated successfully')),
-      catchError((error) => {
-        console.error('Error updating slides:', error);
-        return throwError(() => new Error('Failed to update slides'));
-      })
-    );
-  }
-  
   getImageUrl(url: string): string {
     if (!url) return '';
 
@@ -75,4 +53,3 @@ export class PresentationService {
     return `${this.apiUrl}/uploads/${fileName}`;
   }
 }
-

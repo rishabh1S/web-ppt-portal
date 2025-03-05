@@ -200,59 +200,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
   }
 
-  onSave(): void {
-    if (!this.selectedSlide) {
-      console.warn('No slide selected to save.');
-      return;
-    }
-    this.slideService.slides$.pipe(take(1)).subscribe((slides: any) => {
-      const updatedSlides = slides.map((slide: any) => ({
-        id: slide.id,
-        slideNumber: slide.slideNumber,
-        elements: slide.elements.map((element: any) => ({
-          id: element.id || this.generateUUID(),
-          type: element.type,
-          content: {
-            text: this.stripHtmlTags(element.content?.text || ''),
-            url: element.content?.url || '',
-            svgPath: element.content?.svgPath || '',
-            tableData: element.content?.tableData || [],
-            tableHeader: element.content?.tableHeader || [],
-          },
-          x: element.x || 0,
-          y: element.y || 0,
-          width: element.width || 100,
-          height: element.height || 100,
-          style: {
-            ...element.style,
-            lineDash: '',
-            backgroundImage: null,
-          },
-        })),
-        annotations: slide.annotations || [],
-      }));
-
-      this.presentationService.updateSlides(updatedSlides).subscribe({
-        next: () => console.log('All slides saved successfully'),
-        error: (err) => console.error('Error saving slides:', err),
-      });
-    });
-  }
-
-  stripHtmlTags(html: string): string {
-    return html.replace(/<[^>]*>/g, ''); // Removes all HTML tags
-  }
-
-  generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
+  onSave(): void {}
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
