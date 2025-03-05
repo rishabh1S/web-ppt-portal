@@ -56,15 +56,12 @@ export class PresentationService {
       );
   }
 
-  updateSlide(updatedSlide: Slide): Observable<Slide> {
-    return this.http.patch<Slide>(
-      `${this.apiUrl}/elements/${updatedSlide.id}`, 
-      updatedSlide
-    ).pipe(
-      tap(() => console.log(`Slide ${updatedSlide.id} updated successfully`)),
+  updateSlides(updatedSlides: Slide[]): Observable<Slide[]> {
+    return this.http.patch<Slide[]>(`${this.apiUrl}/elements/batch-update`, updatedSlides).pipe(
+      tap(() => console.log('Slides updated successfully')),
       catchError((error) => {
-        console.error('Error updating slide:', error);
-        return throwError(() => new Error('Failed to update slide'));
+        console.error('Error updating slides:', error);
+        return throwError(() => new Error('Failed to update slides'));
       })
     );
   }
