@@ -192,7 +192,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         id: element.id || this.generateUUID(),
         type: element.type, // Ensure ElementType is included
         content: {
-          text: element.content?.text || '',
+          text: this.stripHtmlTags(element.content?.text || ''),
           url: element.content?.url || '',
           svgPath: element.content?.svgPath || '',
           tableData: element.content?.tableData || [],
@@ -220,6 +220,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
       error: (err) => console.error('Error saving slide:', err),
     });
   }
+
+  stripHtmlTags(html: string): string {
+    return html.replace(/<[^>]*>/g, ''); // Removes all HTML tags
+  }
+  
 
   generateUUID(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
