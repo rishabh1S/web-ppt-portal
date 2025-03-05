@@ -1,24 +1,36 @@
-import fs from "fs";
-import path from "path";
-import asposeSlides from "aspose.slides.via.java";
+
+import fs from 'fs';
+import path from 'path';
+import asposeSlides from 'aspose.slides.via.java';
 
 export function convertPresentationToHtml(inputPath) {
-  // Create a Presentation object by loading the file
   const pres = new asposeSlides.Presentation(inputPath);
+  const slides = [];
 
-  // Define a temporary output file path for the HTML file
-  const outputFileName = `output_${Date.now()}.html`;
-  const outputPath = path.join("uploads", outputFileName);
+  // Loop through each slide
+  for (let i = 0; i < pres.getSlides().size(); i++) {
+    const slide = pres.getSlides().get_Item(i);
 
-  // Save the presentation as HTML
-  pres.save(outputPath, asposeSlides.SaveFormat.Html5);
+    // Create a temporary presentation with only the current slide
+    const tempPres = new asposeSlides.Presentation();
+    try {
+      tempPres.getSlides().removeAt(0); // Remove default empty slide
+      tempPres.getSlides().addClone(slide); // Add only the current slide
 
-  // Read the generated HTML content
-  const htmlContent = fs.readFileSync(outputPath, "utf8");
+      // Save the temporary presentation as HTML to a temporary file
+      const tempFilePath = path.join('uploads', `temp_slide_${i}.html`);
+      tempPres.save(tempFilePath, asposeSlides.SaveFormat.Html);
 
-  // Clean up: remove temporary files
-  fs.unlinkSync(inputPath);
-  fs.unlinkSync(outputPath);
+      // Read the HTML content from the temporary file
+      const htmlContent = fs.readFileSync(tempFilePath, 'utf8');
+      slides.push(htmlContent); // Add the slide content to the array
 
-  return htmlContent;
+      // Clean up the temporary file
+      fs.unlinkSync(tempFilePath);
+    } finally {
+      tempPres.dispose(); // Clean up the temporary presentation
+    }
+  }
+
+  return slides; // Return an array of slide contents
 }
