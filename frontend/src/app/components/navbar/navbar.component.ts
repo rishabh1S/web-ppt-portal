@@ -20,7 +20,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Slide } from '../../model/Slide';
-import { forkJoin, Subscription } from 'rxjs';
+import { forkJoin, Subscription, take } from 'rxjs';
 import { SlideService } from '../../services/slide.service';
 import { EditorService } from '../../services/editor.service';
 import { PresentationService } from '../../services/presentation.service';
@@ -239,8 +239,49 @@ export class NavbarComponent implements OnInit, OnDestroy {
         console.log('Slide saved successfully');
       },
       error: (err) => console.error('Error saving slide:', err),
+    this.slideService.slides$.pipe(
+      take(1) // Take the latest value and complete
+    ).subscribe((slides:any) => {
+      const updatedSlides = slides.map((slide:any) => ({
+        id: slide.id,
+        slideNumber: slide.slideNumber,
+        elements: slide.elements.map((element:any) => ({
+          id: element.id || this.generateUUID(),
+          type: element.type,
+          content: {
+            text: this.stripHtmlTags(element.content?.text || ''),
+            url: element.content?.url || '',
+            svgPath: element.content?.svgPath || '',
+            tableData: element.content?.tableData || [],
+            tableHeader: element.content?.tableHeader || [],
+          },
+          x: element.x || 0,
+          y: element.y || 0,
+          width: element.width || 100,
+          height: element.height || 100,
+          style: {
+            ...element.style,
+            lineDash: '',
+            backgroundImage: null,
+          },
+        })),
+        annotations: slide.annotations || [],
+      }));
+  
+      // Call service to update all slides
+      this.presentationService.updateSlides(updatedSlides).subscribe({
+        next: () => {
+          console.log('All slides saved successfully');
+        },
+        error: (err) => console.error('Error saving slides:', err),
+      });
     });
   }
+
+  stripHtmlTags(html: string): string {
+    return html.replace(/<[^>]*>/g, ''); // Removes all HTML tags
+  }
+  
 
   generateUUID(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
