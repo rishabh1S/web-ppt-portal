@@ -21,6 +21,8 @@ public class PresentationGenerationService {
     ImageGeneration imageGeneration;
     @Autowired
     ShapeGeneration shapeGeneration;
+    @Autowired
+    TableGeneration tableGeneration;
 
     public byte[] generatePresentation(Presentation presentation) throws IOException {
         try (XMLSlideShow ppt = new XMLSlideShow()) {
@@ -54,10 +56,10 @@ public class PresentationGenerationService {
                         imageGeneration.addImage(slide, element);
                         break;
                     case SHAPE:
-                        // shapeGeneration.addAutoShape(slide, element);
+                        shapeGeneration.addAutoShape(slide, element);
                         break;
                     case TABLE:
-                        // addTable(slide, element);
+                        tableGeneration.addTable(slide, element);
                         break;
                 }
             } catch (Exception e) {

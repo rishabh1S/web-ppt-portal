@@ -22,7 +22,7 @@
                 'width.%': element.width, 
                 'height.%': element.height
             }">
-                <img [src]="element.content.url" alt="Slide Image" class="object-contain w-full h-full" />
+                <img [src]="getImageUrl(element.content.url)" alt="Slide Image" class="object-contain w-full h-full" />
             </div>
 
             <!-- SHAPE ELEMENT -->
