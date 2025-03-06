@@ -1,7 +1,6 @@
-<svg [attr.width]="shapeData.width + '%'" [attr.height]="shapeData.height + '%'" class="absolute" [ngStyle]="{ 
-    'left.%': shapeData.x, 
-    'top.%': shapeData.y
-  }" viewBox="0 0 100 100" preserveAspectRatio="none">
+<svg [attr.width]="shapeData.width + '%'" [attr.height]="shapeData.height + '%'" class="absolute"
+  [style.left.%]="shapeData.x" [style.top.%]="shapeData.y" viewBox="0 0 100 100" preserveAspectRatio="none"
+  [style.transform]="shapeData.cssStyle?.transform" [style.opacity]="shapeData.cssStyle?.opacity">
   <path [attr.d]="shapeData.content?.svgPath" [attr.fill]="shapeData.style?.fillColor || 'transparent'"
     [attr.stroke]="shapeData.style?.lineColor || 'transparent'" [attr.stroke-width]="shapeData.style?.lineWidth || 0"
     [attr.stroke-dasharray]="shapeData.style?.lineDash === 'solid' ? 'none' : '5,5'"

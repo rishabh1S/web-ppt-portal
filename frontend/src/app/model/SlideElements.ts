@@ -43,6 +43,9 @@ export interface SlideElement {
     // Table-specific styles
     cellStyles?: any; // Styles for individual table cells (if applicable)
   };
+
+  // CSS style properties map that can be directly used with [ngStyle]
+  cssStyle?: { [key: string]: string };
 }
 export enum ElementType {
   TEXT = 'TEXT',

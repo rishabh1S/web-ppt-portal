@@ -7,7 +7,6 @@ import { EditorService } from '../../services/editor.service';
 import { QuillModule } from 'ngx-quill';
 import Quill from 'quill';
 import { quillModules } from '../../../../utils/quill-config';
-import { ApplyStylesDirective } from '../../directives/apply-styles.directive';
 import { ShapeComponent } from '../shape/shape.component';
 import { TableComponent } from '../table/table.component';
 import { PresentationService } from '../../services/presentation.service';
@@ -18,7 +17,6 @@ import { PresentationService } from '../../services/presentation.service';
     CommonModule,
     FormsModule,
     QuillModule,
-    ApplyStylesDirective,
     ShapeComponent,
     TableComponent,
   ],

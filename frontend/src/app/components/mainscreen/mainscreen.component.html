@@ -2,26 +2,18 @@
     <div *ngFor="let element of selectedSlide.elements">
         <ng-container [ngSwitch]="element.type">
             <!-- TEXT ELEMENT -->
-            <div *ngSwitchCase="'TEXT'" class="absolute" [ngStyle]="{
-                'left.%': element.x, 
-                'top.%': element.y, 
-                'width.%': element.width, 
-                'height.%': element.height
-            }">
+            <div *ngSwitchCase="'TEXT'" class="absolute" [style.left.%]="element.x" [style.top.%]="element.y"
+                [style.width.%]="element.width" [style.height.%]="element.height">
                 <quill-editor [(ngModel)]="element.content.text" [modules]="quillModules"
                     (ngModelChange)="onContentChanged()" (onSelectionChanged)="onSelectionChanged($event)"
                     (onEditorCreated)="onEditorInitialized($event, element.style['fontSize'])" placeholder="Enter text"
-                    class="w-full h-auto" [applyStyles]="element.style">
+                    class="w-full h-auto" [ngStyle]="element.cssStyle">
                 </quill-editor>
             </div>
 
             <!-- IMAGE ELEMENT -->
-            <div *ngSwitchCase="'IMAGE'" class="absolute" [ngStyle]="{
-                'left.%': element.x, 
-                'top.%': element.y, 
-                'width.%': element.width, 
-                'height.%': element.height
-            }">
+            <div *ngSwitchCase="'IMAGE'" class="absolute" [style.left.%]="element.x" [style.top.%]="element.y"
+                [style.width.%]="element.width" [style.height.%]="element.height" [ngStyle]="element.cssStyle">
                 <img [src]="getImageUrl(element.content.url)" alt="Slide Image" class="object-contain w-full h-full" />
             </div>
 
@@ -31,12 +23,8 @@
             </div>
 
             <!-- TABLE ELEMENT -->
-            <div *ngSwitchCase="'TABLE'" class="absolute" [ngStyle]="{
-                'left.%': element.x, 
-                'top.%': element.y, 
-                'width.%': element.width, 
-                'height.%': element.height
-            }">
+            <div *ngSwitchCase="'TABLE'" class="absolute" [style.left.%]="element.x" [style.top.%]="element.y"
+                [style.width.%]="element.width" [style.height.%]="element.height" [ngStyle]="element.cssStyle">
                 <app-table [tableHeader]="element.content.tableHeader" [tableData]="element.content.tableData"
                     [cellStyles]="element.style.cellStyles" [headerCellStyles]="element.style.headerCellStyles"
                     [quillModules]="quillModules" (cellContentChanged)="onCellContentChanged($event)">
