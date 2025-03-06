@@ -66,7 +66,30 @@ export class MainscreenComponent {
     }
   }
 
+  onContentChanged(): void {
+    if (this.selectedSlide) {
+      this.slideService.updateSlide(this.selectedSlide);
+    }
+  }
+
   getImageUrl(url: string): string {
     return this.presentationService.getImageUrl(url);
+  }
+
+  onCellContentChanged(event: {
+    rowIndex: number;
+    cellIndex: number;
+    newValue: string;
+  }): void {
+    if (this.selectedSlide) {
+      const element = this.selectedSlide.elements.find(
+        (e) => e.type === 'TABLE'
+      );
+      if (element) {
+        element.content.tableData[event.rowIndex][event.cellIndex] =
+          event.newValue;
+        this.slideService.updateSlide(this.selectedSlide);
+      }
+    }
   }
 }

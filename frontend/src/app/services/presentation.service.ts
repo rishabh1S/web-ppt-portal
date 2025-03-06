@@ -28,6 +28,17 @@ export class PresentationService {
     return this.http.get<Presentation>(`${this.apiUrl}/presentations/${id}`);
   }
 
+  updatePresentation(id: string, updateData: any): Observable<any> {
+    return this.http
+      .patch(`${this.apiUrl}/presentations/${id}`, updateData)
+      .pipe(
+        catchError((error) => {
+          console.error('Update error:', error);
+          return throwError(() => new Error('Failed to update presentation'));
+        })
+      );
+  }
+
   downloadPresentation(id: string): Observable<Blob> {
     return this.http
       .get(`${this.apiUrl}/presentations/${id}/download`, {

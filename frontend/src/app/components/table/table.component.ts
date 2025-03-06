@@ -16,6 +16,12 @@ export class TableComponent {
   @Input() headerCellStyles: any[][] = [];
   @Input() quillModules: any;
 
+  @Output() cellContentChanged = new EventEmitter<{
+    rowIndex: number;
+    cellIndex: number;
+    newValue: string;
+  }>();
+
   // Called when a cell's content is updated by Quill
   onCellTextChange(rowIndex: number, cellIndex: number, event: any): void {
     // Get the content from the event (adjust based on your ngx-quill version)
@@ -27,6 +33,7 @@ export class TableComponent {
     }
 
     this.tableData[rowIndex][cellIndex] = newValue;
+    this.cellContentChanged.emit({ rowIndex, cellIndex, newValue });
   }
 
   getCellStyle(rowIndex: number, cellIndex: number): any {

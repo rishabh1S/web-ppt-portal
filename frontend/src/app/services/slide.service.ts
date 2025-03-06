@@ -28,7 +28,9 @@ export class SlideService {
   // Update a slide
   updateSlide(updatedSlide: Slide): void {
     const slides = this.slidesSubject.getValue(); // Access current value
-    const updatedSlides = slides.map((s) => (s.id === updatedSlide.id ? updatedSlide : s));
+    const updatedSlides = slides.map((s) =>
+      s.id === updatedSlide.id ? updatedSlide : s
+    );
     this.slidesSubject.next(updatedSlides);
     this.selectedSlideSubject.next(updatedSlide);
   }
@@ -50,9 +52,11 @@ export class SlideService {
     this.selectedSlideSubject.next(null);
   }
 
-
-
-  updateSlideElement(slideId: string, elementId: string, changes: Partial<SlideElement>): void {
+  updateSlideElement(
+    slideId: string,
+    elementId: string,
+    changes: Partial<SlideElement>
+  ): void {
     const slides = this.slidesSubject.getValue();
     const slide = slides.find((s) => s.id === slideId);
     if (slide) {
@@ -62,5 +66,15 @@ export class SlideService {
         this.slidesSubject.next([...slides]); // Notify subscribers
       }
     }
+  }
+
+  convertHtmlToPlainText(htmlContent: string): string {
+    if (!htmlContent) {
+      return '';
+    }
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+
+    return doc.body.textContent?.trim() || '';
   }
 }

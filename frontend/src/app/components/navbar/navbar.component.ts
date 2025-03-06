@@ -26,6 +26,8 @@ import { EditorService } from '../../services/editor.service';
 import { PresentationService } from '../../services/presentation.service';
 import { ActivatedRoute } from '@angular/router';
 import { fontSizes } from '../../../../utils/quill-config';
+import { Presentation } from '../../model/Presentation';
+import { SlideElement } from '../../model/SlideElements';
 
 @Component({
   selector: 'app-navbar',
@@ -63,6 +65,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   selectedSlide: Slide | null = null;
   subscription: Subscription;
   fontSizes: string[] = fontSizes;
+  private originalPresentation: Presentation | null = null;
 
   constructor(
     private slideService: SlideService,
@@ -78,6 +81,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.presentationId = params['id'];
+      this.presentationService
+        .getPresentation(this.presentationId)
+        .pipe(take(1))
+        .subscribe({
+          next: (presentation) => {
+            this.originalPresentation = JSON.parse(
+              JSON.stringify(presentation)
+            ); // Deep copy
+          },
+          error: (error) => {
+            console.error('Error retrieving presentation:', error);
+          },
+        });
     });
   }
 
@@ -200,7 +216,140 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
   }
 
-  onSave(): void {}
+  onSave(): void {
+    if (!this.presentationId || !this.originalPresentation) {
+      console.error('No presentation ID or original data available');
+      return;
+    }
+    const originalPresentation = this.originalPresentation;
+
+    this.slideService.slides$.pipe(take(1)).subscribe((currentSlides) => {
+      const currentPresentation = {
+        ...originalPresentation,
+        slides: currentSlides,
+      };
+      let globalChangeDetected = false;
+
+      const updateSlides = currentPresentation.slides.reduce(
+        (acc: any[], slide, idx) => {
+          if (idx >= originalPresentation.slides.length) {
+            globalChangeDetected = true;
+            return acc;
+          }
+          const { slideUpdate, slideChanged } = this.processSlide(
+            slide,
+            originalPresentation.slides[idx]
+          );
+          if (slideChanged) globalChangeDetected = true;
+          if (slideUpdate) acc.push(slideUpdate);
+          return acc;
+        },
+        []
+      );
+
+      const updateData = {
+        presentationId: this.presentationId,
+        slides: updateSlides,
+      };
+
+      if (updateData.slides.length || globalChangeDetected) {
+        console.log('Update data:', JSON.stringify(updateData, null, 2));
+        this.presentationService
+          .updatePresentation(this.presentationId, updateData)
+          .subscribe({
+            next: () => {
+              console.log('Presentation saved successfully');
+              // Deep copy to update the reference for future comparisons.
+              this.originalPresentation = JSON.parse(
+                JSON.stringify(currentPresentation)
+              );
+            },
+            error: (error) =>
+              console.error('Error saving presentation:', error),
+          });
+      } else {
+        console.log('No changes detected');
+      }
+    });
+  }
+
+  private processSlide(
+    slide: Slide,
+    originalSlide: Slide
+  ): { slideUpdate: any | null; slideChanged: boolean } {
+    const extraElement = slide.elements.length > originalSlide.elements.length;
+    const elementsUpdate = slide.elements
+      .slice(0, originalSlide.elements.length)
+      .map((el: any, idx: number) =>
+        this.processElement(el, originalSlide.elements[idx])
+      )
+      .filter(Boolean);
+
+    const slideChanged = extraElement || elementsUpdate.length > 0;
+    return {
+      slideUpdate: elementsUpdate.length
+        ? { slideId: slide.id, elements: elementsUpdate }
+        : null,
+      slideChanged,
+    };
+  }
+
+  private processElement(
+    element: SlideElement,
+    originalElement: SlideElement
+  ): any | null {
+    const update: any = { elementId: element.id };
+
+    const compareContent = (): any | null => {
+      const { type, content } = element;
+      const { content: originalContent } = originalElement;
+
+      switch (type) {
+        case 'TEXT':
+          if (content.text !== originalContent.text) {
+            return {
+              ...content,
+              text: content.text
+                ? this.slideService.convertHtmlToPlainText(content.text)
+                : content.text,
+            };
+          }
+          break;
+        case 'TABLE':
+          if (
+            JSON.stringify(content.tableData) !==
+            JSON.stringify(originalContent.tableData)
+          ) {
+            return {
+              ...content,
+              tableData: content.tableData?.map((row: any[]) =>
+                row.map((cell) =>
+                  typeof cell === 'string'
+                    ? this.slideService.convertHtmlToPlainText(cell)
+                    : cell
+                )
+              ),
+            };
+          }
+          break;
+        default:
+          if (JSON.stringify(content) !== JSON.stringify(originalContent)) {
+            return content;
+          }
+      }
+      return null;
+    };
+
+    const contentUpdate = compareContent();
+    if (contentUpdate) update.content = contentUpdate;
+    if (
+      JSON.stringify(element.style) !== JSON.stringify(originalElement.style)
+    ) {
+      update.style = element.style;
+    }
+    // Only return an update object if something besides the elementId has been added.
+    return Object.keys(update).length > 1 ? update : null;
+  }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

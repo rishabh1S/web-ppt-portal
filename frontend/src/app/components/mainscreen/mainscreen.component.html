@@ -9,7 +9,7 @@
                 'height.%': element.height
             }">
                 <quill-editor [(ngModel)]="element.content.text" [modules]="quillModules"
-                    (onSelectionChanged)="onSelectionChanged($event)"
+                    (ngModelChange)="onContentChanged()" (onSelectionChanged)="onSelectionChanged($event)"
                     (onEditorCreated)="onEditorInitialized($event, element.style['fontSize'])" placeholder="Enter text"
                     class="w-full h-auto" [applyStyles]="element.style">
                 </quill-editor>
@@ -39,7 +39,7 @@
             }">
                 <app-table [tableHeader]="element.content.tableHeader" [tableData]="element.content.tableData"
                     [cellStyles]="element.style.cellStyles" [headerCellStyles]="element.style.headerCellStyles"
-                    [quillModules]="quillModules">
+                    [quillModules]="quillModules" (cellContentChanged)="onCellContentChanged($event)">
                 </app-table>
             </div>
         </ng-container>
