@@ -1,17 +1,15 @@
-// routes/convert.js
-import express from 'express';
-import multer from 'multer';
-import { convertPresentationToHtml } from '../services/presentationService.js';
-import pool from '../Connection/db.js';
-import { PrismaClient } from '@prisma/client';
+import express from "express";
+import multer from "multer";
+import { convertPresentationToHtml } from "../services/presentationService.js";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: "uploads/" });
 
-router.post('/', upload.single('file'), async (req, res) => {
+router.post("/", upload.single("file"), async (req, res) => {
   if (!req.file) {
-    return res.status(400).send('No file uploaded.');
+    return res.status(400).send("No file uploaded.");
   }
 
   try {
@@ -36,19 +34,18 @@ router.post('/', upload.single('file'), async (req, res) => {
 
     res.status(200).json(presentation);
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Error processing PPT: ' + error.message);
+    console.error("Error:", error);
+    res.status(500).send("Error processing PPT: " + error.message);
   }
 });
 
-
 // Fetch PPT data
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   const presentationId = req.params.id;
 
   // Validate the presentationId
   if (!presentationId) {
-    return res.status(400).send('Invalid presentation ID');
+    return res.status(400).send("Invalid presentation ID");
   }
 
   try {
@@ -58,24 +55,24 @@ router.get('/:id', async (req, res) => {
     });
 
     if (!presentation) {
-      return res.status(404).send('Presentation not found.');
+      return res.status(404).send("Presentation not found.");
     }
 
     res.status(200).json(presentation);
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Error fetching PPT data: ' + error.message);
+    console.error("Error:", error);
+    res.status(500).send("Error fetching PPT data: " + error.message);
   }
 });
 
 // Save edited PPT data
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   const presentationId = req.params.id;
   const { slides } = req.body;
 
   // Validate the presentationId
   if (!presentationId) {
-    return res.status(400).send('Invalid presentation ID');
+    return res.status(400).send("Invalid presentation ID");
   }
 
   try {
@@ -87,10 +84,10 @@ router.put('/:id', async (req, res) => {
       });
     }
 
-    res.status(200).send('Presentation updated successfully.');
+    res.status(200).send("Presentation updated successfully.");
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Error updating PPT: ' + error.message);
+    console.error("Error:", error);
+    res.status(500).send("Error updating PPT: " + error.message);
   }
 });
 export default router;

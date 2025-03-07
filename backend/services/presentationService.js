@@ -1,9 +1,11 @@
-
-import fs from 'fs';
-import path from 'path';
-import asposeSlides from 'aspose.slides.via.java';
+import fs from "fs";
+import path from "path";
+import asposeSlides from "aspose.slides.via.java";
 
 export function convertPresentationToHtml(inputPath) {
+  let license = new asposeSlides.License();
+  license.setLicense("Aspose.SlidesforNode.jsviaJava.lic");
+
   const pres = new asposeSlides.Presentation(inputPath);
   const slides = [];
 
@@ -18,11 +20,11 @@ export function convertPresentationToHtml(inputPath) {
       tempPres.getSlides().addClone(slide); // Add only the current slide
 
       // Save the temporary presentation as HTML to a temporary file
-      const tempFilePath = path.join('uploads', `temp_slide_${i}.html`);
+      const tempFilePath = path.join("uploads", `temp_slide_${i}.html`);
       tempPres.save(tempFilePath, asposeSlides.SaveFormat.Html5);
 
       // Read the HTML content from the temporary file
-      const htmlContent = fs.readFileSync(tempFilePath, 'utf8');
+      const htmlContent = fs.readFileSync(tempFilePath, "utf8");
       slides.push(htmlContent); // Add the slide content to the array
 
       // Clean up the temporary file

@@ -1,5 +1,5 @@
-<div *ngIf="selectedSlide; else noSlide" class="relative aspect-video rounded-md shadow-lg bg-white"
-    [innerHTML]="getSafeHtml(selectedSlide.htmlContent)">
+<div *ngIf="selectedSlide; else noSlide" class="relative aspect-video rounded-md shadow-lg bg-white">
+    <div [innerHTML]="getSafeHtml(selectedSlide.htmlContent)"></div>
 </div>
 
 <ng-template #noSlide>
