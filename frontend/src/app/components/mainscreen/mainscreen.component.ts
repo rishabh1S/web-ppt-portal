@@ -10,6 +10,7 @@ import { quillModules } from '../../../../utils/quill-config';
 import { ShapeComponent } from '../shape/shape.component';
 import { TableComponent } from '../table/table.component';
 import { PresentationService } from '../../services/presentation.service';
+import { ApplyStylesDirective } from '../../directives/apply-styles.directive';
 
 @Component({
   selector: 'app-mainscreen',
@@ -19,6 +20,7 @@ import { PresentationService } from '../../services/presentation.service';
     QuillModule,
     ShapeComponent,
     TableComponent,
+    ApplyStylesDirective,
   ],
   templateUrl: './mainscreen.component.html',
 })
