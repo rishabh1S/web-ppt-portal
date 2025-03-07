@@ -7,7 +7,7 @@ import { Presentation } from '../model/Presentation';
   providedIn: 'root',
 })
 export class PresentationService {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = 'http://localhost:3000';
   private currentPresentationId: string | null = null;
 
   constructor(private http: HttpClient) {}
@@ -16,7 +16,7 @@ export class PresentationService {
     const formData = new FormData();
     formData.append('file', file);
     return this.http
-      .post<Presentation>(`${this.apiUrl}/presentations`, formData)
+      .post<Presentation>(`${this.apiUrl}/convert`, formData)
       .pipe(
         catchError((error) => {
           console.error('Upload error:', error);
@@ -26,7 +26,7 @@ export class PresentationService {
   }
 
   getPresentation(id: string): Observable<Presentation> {
-    return this.http.get<Presentation>(`${this.apiUrl}/presentations/${id}`);
+    return this.http.get<Presentation>(`${this.apiUrl}/convert/${id}`);
   }
 
   downloadPresentation(id: string): Observable<Blob> {

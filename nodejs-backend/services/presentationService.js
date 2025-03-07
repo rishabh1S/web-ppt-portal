@@ -19,7 +19,7 @@ export function convertPresentationToHtml(inputPath) {
 
       // Save the temporary presentation as HTML to a temporary file
       const tempFilePath = path.join('uploads', `temp_slide_${i}.html`);
-      tempPres.save(tempFilePath, asposeSlides.SaveFormat.Html);
+      tempPres.save(tempFilePath, asposeSlides.SaveFormat.Html5);
 
       // Read the HTML content from the temporary file
       const htmlContent = fs.readFileSync(tempFilePath, 'utf8');

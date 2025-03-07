@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { lucideCirclePlus, lucideClock, lucideFileUp } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { switchMap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 import { PresentationService } from '../../services/presentation.service';
 
 @Component({
@@ -51,20 +51,17 @@ export class LandingPageComponent {
   importPPT(event: any): void {
     const file = event.target.files[0];
     if (!file) return;
-
-    this.presentationService
-      .uploadPresentation(file)
-      .pipe(
-        switchMap((presentation) =>
-          this.presentationService.getPresentation(presentation.id)
-        )
-      )
-      .subscribe({
-        next: (fullPresentation) => {
-          console.log('Presentation Data:', fullPresentation);
-          this.router.navigate(['/ppt-screen', fullPresentation.id]);
-        },
-        error: (err) => console.error('Upload failed:', err),
-      });
+  
+    this.presentationService.uploadPresentation(file).pipe(
+      tap((presentation) => console.log('Uploaded Presentation:', presentation)), // Log the uploaded presentation
+      switchMap((presentation) => this.presentationService.getPresentation(presentation.id))
+    ).subscribe({
+      next: (fullPresentation) => {
+        console.log('Full Presentation Data:', fullPresentation);
+        this.router.navigate(['/ppt-screen', fullPresentation.id]);
+      },
+      error: (err) => console.error('Upload failed:', err),
+    });
   }
+  
 }
