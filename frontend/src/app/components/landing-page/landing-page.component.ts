@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { lucideCirclePlus, lucideClock, lucideFileUp } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { switchMap } from 'rxjs';
+import { finalize, switchMap } from 'rxjs';
 import { PresentationService } from '../../services/presentation.service';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-landing-page',
-  imports: [NgIcon, CommonModule],
+  imports: [NgIcon, CommonModule, NgxSpinnerModule],
   viewProviders: [
     provideIcons({ lucideClock, lucideCirclePlus, lucideFileUp }),
   ],
@@ -32,7 +33,8 @@ export class LandingPageComponent {
 
   constructor(
     private presentationService: PresentationService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   createNewSlide() {
@@ -52,12 +54,17 @@ export class LandingPageComponent {
     const file = event.target.files[0];
     if (!file) return;
 
+    this.spinner.show();
+
     this.presentationService
       .uploadPresentation(file)
       .pipe(
         switchMap((presentation) =>
           this.presentationService.getPresentation(presentation.id)
-        )
+        ),
+        finalize(() => {
+          this.spinner.hide();
+        })
       )
       .subscribe({
         next: (fullPresentation) => {
