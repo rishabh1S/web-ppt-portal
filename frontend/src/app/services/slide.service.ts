@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Slide } from '../model/Slide';
-import { SlideElement } from '../model/SlideElements';
 
 @Injectable({
   providedIn: 'root',
@@ -50,31 +49,5 @@ export class SlideService {
   clearSlides(): void {
     this.slidesSubject.next([]);
     this.selectedSlideSubject.next(null);
-  }
-
-  updateSlideElement(
-    slideId: string,
-    elementId: string,
-    changes: Partial<SlideElement>
-  ): void {
-    const slides = this.slidesSubject.getValue();
-    const slide = slides.find((s) => s.id === slideId);
-    if (slide) {
-      const element = slide.elements.find((e) => e.id === elementId);
-      if (element) {
-        Object.assign(element, changes); // Apply changes
-        this.slidesSubject.next([...slides]); // Notify subscribers
-      }
-    }
-  }
-
-  convertHtmlToPlainText(htmlContent: string): string {
-    if (!htmlContent) {
-      return '';
-    }
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlContent, 'text/html');
-
-    return doc.body.textContent?.trim() || '';
   }
 }
