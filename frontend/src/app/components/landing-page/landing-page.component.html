@@ -1,22 +1,26 @@
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8 space-y-16 min-h-screen">
+
   <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
   <header class="mb-8">
-    <h1 class="text-3xl font-bold">PPT Web Portal</h1>
-    <p class="text-muted-foreground">Create and edit presentations with ease</p>
+    <div class="flex items-center space-x-4">
+      <div>
+        <h1 class="text-4xl font-bold text-gray-800 mb-1">Content Creator</h1>
+        <p class="text-gray-600">Create and edit presentations with ease</p>
+      </div>
+    </div>
   </header>
 
-  <main>
-    <section class="mb-12">
+  <main class="space-y-8">
+    <section>
       <h2 class="text-2xl font-semibold mb-4">Start a presentation</h2>
       <div class="flex gap-4">
-        <button variant="outline"
-          class="h-32 w-48 flex flex-col items-center justify-center gap-2 cursor-pointer border border-gray-200 rounded-lg"
-          (click)="createNewSlide()">
-          <ng-icon name="lucideCirclePlus" size="25"></ng-icon>
-          <span>Blank</span>
+        <button (click)="createNewSlide()"
+          class="h-32 w-48 flex flex-col items-center justify-center gap-2 border border-gray-200 rounded-lg hover:shadow-md transition duration-300 cursor-pointer">
+          <ng-icon name="lucideCirclePlus" size="30"></ng-icon>
+          <span class="font-medium text-gray-800">Blank Presentation</span>
         </button>
         <label
-          class="h-32 w-48 flex flex-col items-center justify-center gap-2 cursor-pointer border border-gray-200 rounded-lg">
+          class="h-32 w-48 flex flex-col items-center justify-center gap-2 border border-gray-200 rounded-lg hover:shadow-md transition duration-300 cursor-pointer">
           <ng-icon name="lucideFileUp" size="25"></ng-icon>
           <span>Upload</span>
           <input type="file" (change)="importPPT($event)" accept=".ppt,.pptx" hidden />
@@ -25,7 +29,7 @@
 
     </section>
 
-    <section class="mb-12">
+    <section>
       <h2 class="text-2xl font-semibold mb-4">Template gallery</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         <div *ngFor="let temp of templates"
@@ -52,7 +56,7 @@
           <div class="p-4">
             <div class="aspect-video bg-gray-200 mb-2 rounded"></div>
             <h3 class="font-medium truncate">{{ slide.title }}</h3>
-            <p class="text-sm text-gray-500 flex items-center">
+            <p class="text-sm text-gray-500 flex items-center gap-2">
               <ng-icon name="lucideClock" size="16"></ng-icon>
               {{ slide.lastEdited }}
             </p>
@@ -61,4 +65,20 @@
       </div>
     </section>
   </main>
+
+  <footer class="py-8 border-t border-gray-200">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col md:flex-row md:justify-between items-center">
+        <div class="flex items-center space-x-2 mb-4 md:mb-0">
+          <span class="font-medium text-gray-800">Content Creator</span>
+        </div>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-500 hover:text-purple-500 transition-colors text-sm">Privacy</a>
+          <a href="#" class="text-gray-500 hover:text-purple-500 transition-colors text-sm">Terms</a>
+          <a href="#" class="text-gray-500 hover:text-purple-500 transition-colors text-sm">Help Center</a>
+          <a href="#" class="text-gray-500 hover:text-purple-500 transition-colors text-sm">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </div>
