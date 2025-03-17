@@ -1,5 +1,6 @@
 package com.example.aspose.service;
 
+import com.aspose.slides.Html5Options;
 import com.aspose.slides.ISlide;
 import com.aspose.slides.License;
 import com.aspose.slides.Presentation;
@@ -7,13 +8,21 @@ import com.aspose.slides.SaveFormat;
 import com.example.aspose.model.Slide;
 import com.example.aspose.repository.PresentationRepository;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 
 @Service
 public class PresentationService {
@@ -21,6 +30,8 @@ public class PresentationService {
     PresentationRepository presentationRepo;
     @Autowired
     FileStorageService fileStorageService;
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     static {
         try {
@@ -38,7 +49,7 @@ public class PresentationService {
         String filePath = fileStorageService.storeFile(file);
 
         // 2. Load the PPTX file using Aspose.Slides
-        Presentation asposePresentation = new Presentation(file.getInputStream()); // No try-with-resources
+        Presentation asposePresentation = new Presentation(file.getInputStream());
         try {
             com.example.aspose.model.Presentation dbPresentation = new com.example.aspose.model.Presentation();
             dbPresentation.setOriginalFilePath(filePath);
@@ -50,19 +61,35 @@ public class PresentationService {
                 throw new IOException("The PPTX file contains no slides.");
             }
 
+            // Get slide dimensions
+            float slideWidth = (float) asposePresentation.getSlideSize().getSize().getWidth();
+            float slideHeight = (float) asposePresentation.getSlideSize().getSize().getHeight();
+
             int slideNumber = 1;
             for (ISlide asposeSlide : asposePresentation.getSlides()) {
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                // Generate a unique folder for this presentation
+                String presentationFolder = uploadDir + "/" + dbPresentation.getName() + "_slides";
+                Files.createDirectories(Paths.get(presentationFolder));
+
+                // Generate a unique HTML file path
+                String htmlFileName = "slide_" + slideNumber + ".html";
+                String htmlFilePath = Paths.get(presentationFolder, htmlFileName).toString();
+
+                // Create a temporary presentation with just the current slide
                 Presentation tempPresentation = new Presentation();
                 try {
                     tempPresentation.getSlides().removeAt(0);
                     tempPresentation.getSlides().addClone(asposeSlide);
-                    tempPresentation.save(outputStream, SaveFormat.Html5);
+                    // Save as HTML5
+                    Html5Options options = new Html5Options();
+                    tempPresentation.save(htmlFilePath, SaveFormat.Html5, options);
+                    inlineResources(htmlFilePath, presentationFolder, slideWidth, slideHeight);
                 } finally {
                     tempPresentation.dispose();
                 }
 
-                String htmlContent = outputStream.toString("UTF-8");
+                // Read the HTML content from the file
+                String htmlContent = new String(Files.readAllBytes(Paths.get(htmlFilePath)), StandardCharsets.UTF_8);
 
                 Slide dbSlide = new Slide();
                 dbSlide.setSlideNumber(slideNumber++);
@@ -75,5 +102,47 @@ public class PresentationService {
         } finally {
             asposePresentation.dispose();
         }
+    }
+
+    private void inlineResources(String htmlFilePath, String presentationFolder, float slideWidth, float slideHeight)
+            throws IOException {
+        Path htmlPath = Paths.get(htmlFilePath);
+        String htmlContent = new String(Files.readAllBytes(htmlPath), StandardCharsets.UTF_8);
+
+        Document doc = Jsoup.parse(htmlContent, StandardCharsets.UTF_8.name());
+
+        // 1. Inline CSS files
+        for (Element link : doc.select("link[rel=stylesheet]")) {
+            String cssHref = link.attr("href");
+            Path cssPath = htmlPath.getParent().resolve(cssHref);
+            if (Files.exists(cssPath)) {
+                String css = new String(Files.readAllBytes(cssPath), StandardCharsets.UTF_8);
+                Element style = new Element(Tag.valueOf("style"), "");
+                style.text(css);
+                link.replaceWith(style);
+                Files.deleteIfExists(cssPath);
+            }
+        }
+
+        // 2. Modify .slide CSS class and styles for tr in all <style> blocks
+        for (Element style : doc.select("style")) {
+            String modifiedCss = style.html()
+                    .replaceAll(
+                            "\\.slide\\s*\\{([^}]*)\\}",
+                            String.format(
+                                    ".slide { width: %.2fpx; height: %.2fpx; overflow: hidden; position: relative; }",
+                                    slideWidth, slideHeight))
+                    + "\n tr { line-height: 0.5; }";
+            style.html(modifiedCss);
+        }
+
+        for (Element element : doc.select("[style]")) {
+            String inlineStyle = element.attr("style");
+            inlineStyle = inlineStyle.replaceAll("white-space:\\s*pre-wrap;", "");
+            element.attr("style", inlineStyle);
+        }
+
+        // 3. Save the modified HTML
+        Files.write(htmlPath, doc.outerHtml().getBytes(StandardCharsets.UTF_8));
     }
 }

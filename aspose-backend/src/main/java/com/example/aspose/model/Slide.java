@@ -35,6 +35,7 @@ public class Slide {
     @JoinColumn(name = "presentation_id")
     @JsonBackReference
     private Presentation presentation;
+
     @Column(columnDefinition = "TEXT")
     private String htmlContent;
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Slide } from '../../model/Slide';
@@ -11,9 +11,11 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   selector: 'app-mainscreen',
   imports: [CommonModule, FormsModule, QuillModule],
   templateUrl: './mainscreen.component.html',
+  encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class MainscreenComponent {
   selectedSlide: Slide | null = null;
+  safeHtmlContent: SafeHtml | null = null;
   isEditable = true;
   quillModules = quillModules;
 
@@ -23,10 +25,9 @@ export class MainscreenComponent {
   ) {
     this.slideService.selectedSlide$.subscribe((slide) => {
       this.selectedSlide = slide ? { ...slide } : null;
+      this.safeHtmlContent = slide?.htmlContent
+        ? this.sanitizer.bypassSecurityTrustHtml(slide.htmlContent)
+        : null;
     });
-  }
-
-  getSafeHtml(html: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 }
