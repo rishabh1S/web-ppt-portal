@@ -12,6 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -136,13 +137,35 @@ public class PresentationService {
             style.html(modifiedCss);
         }
 
+        // 3. Remove unwanted inline styles
         for (Element element : doc.select("[style]")) {
             String inlineStyle = element.attr("style");
             inlineStyle = inlineStyle.replaceAll("white-space:\\s*pre-wrap;", "");
             element.attr("style", inlineStyle);
         }
 
-        // 3. Save the modified HTML
+        // 4. Add contenteditable to text-containing elements outside tables
+        for (Element element : doc.select("span, p, div")) {
+            if (!element.ownText().trim().isEmpty()) {
+                element.attr("contenteditable", "true");
+            }
+        }
+
+        // 5. Handle table cells: Mark innermost elements even if empty
+        for (Element td : doc.select("td")) {
+            // Find the deepest span/p/div within the <td>
+            Elements innermostElements = td.select("span, p, div").select("*:not(:has(span, p, div))");
+            for (Element el : innermostElements) {
+                el.attr("contenteditable", "true");
+            }
+
+            // If no innermost elements exist, mark the <td> itself
+            if (innermostElements.isEmpty()) {
+                td.attr("contenteditable", "true");
+            }
+        }
+
+        // 6. Save the modified HTML
         Files.write(htmlPath, doc.outerHtml().getBytes(StandardCharsets.UTF_8));
     }
 }
