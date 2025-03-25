@@ -33,6 +33,7 @@ import java.util.Map;
 
 @Service
 public class PresentationService {
+
     @Autowired
     PresentationRepository presentationRepo;
     @Autowired
@@ -63,7 +64,7 @@ public class PresentationService {
         Presentation asposePres = null;
         try {
             asposePres = new Presentation(file.getInputStream());
-            // Set presentation dimensions (convert to EMUs)
+            // Set presentation dimensions
             presentation.setWidth(asposePres.getSlideSize().getSize().getWidth());
             presentation.setHeight(asposePres.getSlideSize().getSize().getHeight());
 
@@ -87,17 +88,32 @@ public class PresentationService {
         slide.setSlideNumber(asposeSlide.getSlideNumber());
         slide.setPresentation(presentation);
 
+        // Process shapes recursively (including groups)
         for (IShape shape : asposeSlide.getShapes()) {
+            processShapeRecursive(shape, slide);
+        }
+        return slide;
+    }
+
+    private void processShapeRecursive(IShape shape, Slide slide) {
+        if (shape instanceof IGroupShape) {
+            IGroupShape groupShape = (IGroupShape) shape;
+            // Recursively process each child in the group
+            for (IShape child : groupShape.getShapes()) {
+                processShapeRecursive(child, slide);
+            }
+        } else {
             SlideElement element = processShape(shape);
             if (element != null) {
                 element.setSlide(slide);
                 slide.getElements().add(element);
             }
         }
-
-        return slide;
     }
 
+    /**
+     * Processes a non-group shape and returns a SlideElement.
+     */
     private SlideElement processShape(IShape shape) {
         SlideElement element = new SlideElement();
         element.setX(shape.getX());
@@ -114,9 +130,8 @@ public class PresentationService {
             processTable((ITable) shape, element, content, style);
         } else if (shape instanceof IPictureFrame) {
             processImage((IPictureFrame) shape, element, content, style);
-        } else if (shape instanceof IGroupShape) {
-            return null; // Skip groups for simplicity
         } else {
+            // For other shapes, mark as generic shape
             element.setType(ElementType.SHAPE);
             content.put("shapeType", shape.getClass().getSimpleName());
         }
@@ -128,22 +143,28 @@ public class PresentationService {
 
     private void processAutoShape(IAutoShape autoShape, SlideElement element,
             Map<String, Object> content, Map<String, Object> style) {
-        element.setType(ElementType.TEXT_BOX);
-        content.put("text", autoShape.getTextFrame().getText());
+        // Mark as a text box if text exists; otherwise, treat as generic shape.
+        if (autoShape.getTextFrame() != null && autoShape.getTextFrame().getText() != null) {
+            element.setType(ElementType.TEXT_BOX);
+            content.put("text", autoShape.getTextFrame().getText());
 
-        // Extract text styles
-        if (autoShape.getTextFrame().getParagraphs().getCount() > 0) {
-            IParagraph firstParagraph = autoShape.getTextFrame().getParagraphs().get_Item(0);
-            if (firstParagraph.getPortions().getCount() > 0) {
-                IPortion firstPortion = firstParagraph.getPortions().get_Item(0);
-                IPortionFormat format = firstPortion.getPortionFormat();
+            // Extract text styles if available
+            if (autoShape.getTextFrame().getParagraphs().getCount() > 0) {
+                IParagraph firstParagraph = autoShape.getTextFrame().getParagraphs().get_Item(0);
+                if (firstParagraph.getPortions().getCount() > 0) {
+                    IPortion firstPortion = firstParagraph.getPortions().get_Item(0);
+                    IPortionFormat format = firstPortion.getPortionFormat();
 
-                style.put("fontSize", format.getFontHeight());
-                style.put("fontColor", colorToString(format.getFillFormat().getSolidFillColor()));
-                style.put("fontFamily", format.getLatinFont().getFontName());
-                style.put("bold", format.getFontBold() == NullableBool.True);
-                style.put("italic", format.getFontItalic() == NullableBool.True);
+                    style.put("fontSize", format.getFontHeight());
+                    style.put("fontColor", colorToString(format.getFillFormat().getSolidFillColor()));
+                    style.put("fontFamily", format.getLatinFont().getFontName());
+                    style.put("bold", format.getFontBold() == NullableBool.True);
+                    style.put("italic", format.getFontItalic() == NullableBool.True);
+                }
             }
+        } else {
+            // If no text is present, simply mark the type as shape.
+            element.setType(ElementType.SHAPE);
         }
 
         // Shape appearance
@@ -161,7 +182,11 @@ public class PresentationService {
             List<Map<String, Object>> cells = new ArrayList<>();
             for (ICell cell : row) {
                 Map<String, Object> cellData = new HashMap<>();
-                cellData.put("text", cell.getTextFrame().getText());
+                if (cell.getTextFrame() != null) {
+                    cellData.put("text", cell.getTextFrame().getText());
+                } else {
+                    cellData.put("text", "");
+                }
                 cellData.put("rowSpan", cell.getRowSpan());
                 cellData.put("colSpan", cell.getColSpan());
                 cells.add(cellData);
@@ -174,12 +199,18 @@ public class PresentationService {
     private void processImage(IPictureFrame pictureFrame, SlideElement element,
             Map<String, Object> content, Map<String, Object> style) {
         element.setType(ElementType.IMAGE);
-
+        try {
+            byte[] imageData = pictureFrame.getPictureFormat().getPicture().getImage().getBinaryData();
+            String imagePath = fileStorageService.storeImage(imageData);
+            content.put("url", imagePath);
+        } catch (Exception e) {
+            content.put("error", "Failed to process image: " + e.getMessage());
+        }
     }
 
     private String colorToString(IColorFormat colorFormat) {
         return String.format("#%02x%02x%02x",
-                colorFormat.getB(),
+                colorFormat.getR(),
                 colorFormat.getG(),
                 colorFormat.getB());
     }
