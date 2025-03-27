@@ -41,6 +41,7 @@ public class PresentationService {
         // 2. Parse PPTX using Apache POI
         try (XMLSlideShow slideShow = new XMLSlideShow(file.getInputStream())) {
             Presentation presentation = new Presentation();
+            presentation.setName(file.getOriginalFilename());
             presentation.setOriginalFilePath(filePath);
 
             // Get slide dimensions
