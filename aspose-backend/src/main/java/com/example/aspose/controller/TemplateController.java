@@ -9,25 +9,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aspose.slides.Presentation;
 import com.aspose.slides.SaveFormat;
-import com.example.aspose.service.OverviewSlideService;
+import com.example.aspose.service.StandardTemplateService;
+import com.example.aspose.util.AsposeLicense;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api/overview-slide")
-public class OverviewSlideController {
+@RequestMapping("/api/standard-slide")
+public class TemplateController {
     @Autowired
-    private OverviewSlideService overviewSlideService;
+    private StandardTemplateService standardTemplateService;
 
     @GetMapping
     public void generateOverviewSlide(HttpServletResponse response) throws IOException {
+        AsposeLicense.setLicense();
         response.setContentType("application/vnd.openxmlformats-officedocument.presentationml.presentation");
-        response.setHeader("Content-Disposition", "attachment; filename=overview.pptx");
+        response.setHeader("Content-Disposition", "attachment; filename=presentation.pptx");
 
         Presentation pres = null;
         try {
             pres = new Presentation();
-            overviewSlideService.createOverviewSlide(pres);
+            standardTemplateService.createStandardSlide(pres);
             pres.save(response.getOutputStream(), SaveFormat.Pptx);
         } finally {
             if (pres != null) {
