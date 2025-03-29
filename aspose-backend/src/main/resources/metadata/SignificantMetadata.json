@@ -1,0 +1,185 @@
+{
+  "stdTemplateId": 100,
+  "slideTitle": "Name of IA Report with Significant Improvements Needed",
+  "legalEntity": ["Citigroup", "Citibank NA"],
+  "presenters": ["Presenter A", "Presenter B"],
+  "isCSI": true,
+  "height": 540,
+  "width": 960,
+  "stdTemplateContent": [
+    {
+      "objectId": 1,
+      "objectType": "text",
+      "objectRole": "title",
+      "x": 36,
+      "y": 36,
+      "height": 30,
+      "width": 648,
+      "styles": {
+        "fontFamily": "Citi Sans Display",
+        "fontSize": "22pt",
+        "textAlign": "left",
+        "color": "rgb(37,91,227)"
+      },
+      "content": "Name of IA Report with Significant Improvements Needed"
+    },
+    {
+      "objectId": 2,
+      "objectType": "text",
+      "objectRole": "legalEntity",
+      "x": 787,
+      "y": 0,
+      "height": 21,
+      "width": 86,
+      "styles": {
+        "fontFamily": "Citi Sans Body",
+        "fontSize": "10pt",
+        "textAlign": "center",
+        "color": "rgb(255,255,255)",
+        "backgroundColor": "rgb(37,91,227)"
+      },
+      "content": "Citigroup"
+    },
+    {
+      "objectId": 3,
+      "objectType": "text",
+      "objectRole": "legalEntity",
+      "x": 873,
+      "y": 0,
+      "height": 21,
+      "width": 87,
+      "styles": {
+        "fontFamily": "Citi Sans Body",
+        "fontSize": "10pt",
+        "textAlign": "center",
+        "color": "rgb(255,255,255)",
+        "backgroundColor": "rgb(221,21,0)"
+      },
+      "content": "Citibank NA"
+    },
+    {
+      "objectId": 4,
+      "objectType": "text",
+      "objectRole": "presenters",
+      "x": 765,
+      "y": 21,
+      "height": 40,
+      "width": 175,
+      "styles": {
+        "fontFamily": "Citi Sans Body",
+        "fontSize": "10pt",
+        "textAlign": "center",
+        "color": "rgb(0,0,0)"
+      },
+      "content": "Presenters: Presenter A, Presenter B"
+    },
+    {
+      "objectId": 5,
+      "objectType": "text",
+      "objectRole": "footer",
+      "x": 36,
+      "y": 486,
+      "height": 18,
+      "width": 648,
+      "styles": {
+        "fontFamily": "Citi Sans Body",
+        "fontSize": "10pt",
+        "textAlign": "left",
+        "color": "rgb(0,0,0)"
+      },
+      "content": ""
+    },
+    {
+      "objectId": 6,
+      "objectType": "text",
+      "objectRole": "csi",
+      "x": 36,
+      "y": 506,
+      "height": 18,
+      "width": 648,
+      "styles": {
+        "fontFamily": "Citi Sans Body",
+        "fontSize": "8pt",
+        "textAlign": "left",
+        "color": "rgb(89,130,234)"
+      },
+      "content": "Confidential Supervisory Information: Confidential Treatment Requested"
+    },
+    {
+      "objectId": 7,
+      "objectType": "table",
+      "objectRole": "table",
+      "x": 21,
+      "y": 72,
+      "height": 86,
+      "width": 914,
+      "styles": {
+        "border": {
+          "width": 0.5,
+          "color": "rgb(130,130,130)"
+        },
+        "header": {
+          "backgroundColor": "rgb(15,22,50)",
+          "fontFamily": "Citi Sans Body",
+          "fontSize": "10pt",
+          "fontWeight": "bold",
+          "color": "rgb(255,255,255)",
+          "textAlign": "center"
+        },
+        "body": {
+          "fontFamily": "Citi Sans Body",
+          "fontSize": "9pt",
+          "fontWeight": "normal",
+          "color": "rgb(0,0,0)",
+          "textAlign": "left"
+        }
+      },
+      "headers": [
+        "Risk-Based Audit Report Name",
+        "Report Date",
+        "Audit Report Rating",
+        "Business / Function",
+        "Accountable Executive",
+        "Responsible Chief Auditor"
+      ],
+      "content": []
+    },
+    {
+      "objectId": 8,
+      "objectType": "table",
+      "objectRole": "table",
+      "x": 21,
+      "y": 173,
+      "height": 316.8,
+      "width": 914,
+      "styles": {
+        "border": {
+          "width": 0.5,
+          "color": "rgb(130,130,130)"
+        },
+        "header": {
+          "fontFamily": "Citi Sans Body",
+          "fontSize": "10pt",
+          "fontWeight": "bold",
+          "backgroundColor": "rgb(41,60,136)",
+          "color": "rgb(255,255,255)",
+          "textAlign": "left"
+        },
+        "body": {
+          "fontFamily": "Citi Sans Body",
+          "fontSize": "10pt",
+          "fontWeight": "normal",
+          "color": "rgb(0,0,0)",
+          "textAlign": "left"
+        }
+      },
+      "headers": [
+        "Scope of Audit Review",
+        "Drivers of Audit Rating",
+        "Remediation Approach and Timeline",
+        "Key Dependencies or Constraints with Remediation Plan"
+      ],
+      "content": []
+    }
+  ]
+}
