@@ -1,0 +1,84 @@
+{
+  "title": {
+    "objectType": "text",
+    "x": 36,
+    "y": 36,
+    "height": 30,
+    "width": 648,
+    "styles": {
+      "fontFamily": "Citi Sans Display (Headings)",
+      "fontSize": "22pt",
+      "textAlign": "left",
+      "color": "rgb(37,91,227)"
+    }
+  },
+  "csi": {
+    "objectType": "text",
+    "x": 380,
+    "y": 526,
+    "height": 18,
+    "width": 358,
+    "styles": {
+      "fontFamily": "Citi Sans Text (Body)",
+      "fontSize": "7pt",
+      "textAlign": "left",
+      "color": "rgb(89,130,234)"
+    }
+  },
+  "footer": {
+    "objectType": "text",
+    "x": 58,
+    "y": 497,
+    "height": 29,
+    "width": 850,
+    "styles": {
+      "fontFamily": "Citi Sans Text (Body)",
+      "fontSize": "8pt",
+      "textAlign": "left",
+      "color": "rgb(138,138,143)"
+    }
+  },
+  "legalEntity": [
+    {
+      "objectType": "text",
+      "x": 787,
+      "y": 0,
+      "height": 21,
+      "width": 86,
+      "styles": {
+        "fontFamily": "Citi Sans Text (Body)",
+        "fontSize": "10pt",
+        "textAlign": "center",
+        "color": "rgb(255,255,255)",
+        "backgroundColor": "rgb(37,91,227)"
+      }
+    },
+    {
+      "objectType": "text",
+      "x": 873,
+      "y": 0,
+      "height": 21,
+      "width": 87,
+      "styles": {
+        "fontFamily": "Citi Sans Text (Body)",
+        "fontSize": "10pt",
+        "textAlign": "center",
+        "color": "rgb(255,255,255)",
+        "backgroundColor": "rgb(221,21,0)"
+      }
+    }
+  ],
+  "presenters": {
+    "objectType": "text",
+    "x": 765,
+    "y": 21,
+    "height": 40,
+    "width": 175,
+    "styles": {
+      "fontFamily": "Citi Sans Text (Body)",
+      "fontSize": "10pt",
+      "textAlign": "center",
+      "color": "rgb(0,0,0)"
+    }
+  }
+}

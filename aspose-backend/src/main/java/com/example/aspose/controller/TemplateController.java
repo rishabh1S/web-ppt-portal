@@ -24,7 +24,7 @@ public class TemplateController {
     public void generateSignificantSlide(HttpServletResponse response) throws IOException {
         AsposeLicense.setLicense();
         response.setContentType("application/vnd.openxmlformats-officedocument.presentationml.presentation");
-        response.setHeader("Content-Disposition", "attachment; filename=presentation.pptx");
+        response.setHeader("Content-Disposition", "attachment; filename=significant.pptx");
 
         Presentation pres = null;
         try {
@@ -43,13 +43,32 @@ public class TemplateController {
     public void generateEscalationSlide(HttpServletResponse response) throws IOException {
         AsposeLicense.setLicense();
         response.setContentType("application/vnd.openxmlformats-officedocument.presentationml.presentation");
-        response.setHeader("Content-Disposition", "attachment; filename=presentation.pptx");
+        response.setHeader("Content-Disposition", "attachment; filename=escalation.pptx");
 
         Presentation pres = null;
         try {
             pres = new Presentation();
             templateService.createStandardSlide(pres,
                     "EscalationMetadata.json");
+            pres.save(response.getOutputStream(), SaveFormat.Pptx);
+        } finally {
+            if (pres != null) {
+                pres.dispose();
+            }
+        }
+    }
+
+    @GetMapping("/risk")
+    public void generateRiskSlide(HttpServletResponse response) throws IOException {
+        AsposeLicense.setLicense();
+        response.setContentType("application/vnd.openxmlformats-officedocument.presentationml.presentation");
+        response.setHeader("Content-Disposition", "attachment; filename=risk.pptx");
+
+        Presentation pres = null;
+        try {
+            pres = new Presentation();
+            templateService.createStandardSlide(pres,
+                    "RiskMetadata.json");
             pres.save(response.getOutputStream(), SaveFormat.Pptx);
         } finally {
             if (pres != null) {

@@ -1,112 +1,11 @@
 {
-  "stdTemplateId": 101,
-  "slideTitle": "Escalating Committee: Event Type – Escalation Name",
-  "legalEntity": ["Citigroup", "Citibank"],
-  "presenters": ["First LOD Representative"],
+  "stdTemplateId": 100,
   "isCSI": true,
   "height": 540,
   "width": 960,
   "stdTemplateContent": [
     {
       "objectId": 1,
-      "objectType": "text",
-      "objectRole": "title",
-      "x": 36,
-      "y": 36,
-      "height": 30,
-      "width": 648,
-      "styles": {
-        "fontFamily": "Citi Sans Display",
-        "fontSize": "22pt",
-        "textAlign": "left",
-        "color": "rgb(37,91,227)"
-      },
-      "content": "Escalating Committee: Event Type – Escalation Name"
-    },
-    {
-      "objectId": 2,
-      "objectType": "text",
-      "objectRole": "csi",
-      "x": 36,
-      "y": 506,
-      "height": 18,
-      "width": 648,
-      "styles": {
-        "fontFamily": "Citi Sans Body",
-        "fontSize": "8pt",
-        "textAlign": "left",
-        "color": "rgb(89,130,234)"
-      },
-      "content": "Confidential Supervisory Information - Confidential Treatment Required"
-    },
-    {
-      "objectId": 3,
-      "objectType": "text",
-      "objectRole": "footer",
-      "x": 36,
-      "y": 486,
-      "height": 18,
-      "width": 648,
-      "styles": {
-        "fontFamily": "Citi Sans Body",
-        "fontSize": "10pt",
-        "textAlign": "left",
-        "color": "rgb(0,0,0)"
-      },
-      "content": ""
-    },
-    {
-      "objectId": 4,
-      "objectType": "text",
-      "objectRole": "legalEntity",
-      "x": 787,
-      "y": 0,
-      "height": 21,
-      "width": 86,
-      "styles": {
-        "fontFamily": "Citi Sans Body",
-        "fontSize": "10pt",
-        "textAlign": "center",
-        "color": "rgb(255,255,255)",
-        "backgroundColor": "rgb(37,91,227)"
-      },
-      "content": "Citigroup"
-    },
-    {
-      "objectId": 5,
-      "objectType": "text",
-      "objectRole": "legalEntity",
-      "x": 873,
-      "y": 0,
-      "height": 21,
-      "width": 87,
-      "styles": {
-        "fontFamily": "Citi Sans Body",
-        "fontSize": "10pt",
-        "textAlign": "center",
-        "color": "rgb(255,255,255)",
-        "backgroundColor": "rgb(221,21,0)"
-      },
-      "content": "Citibank"
-    },
-    {
-      "objectId": 6,
-      "objectType": "text",
-      "objectRole": "presenters",
-      "x": 765,
-      "y": 21,
-      "height": 40,
-      "width": 175,
-      "styles": {
-        "fontFamily": "Citi Sans Body",
-        "fontSize": "10pt",
-        "textAlign": "center",
-        "color": "rgb(0,0,0)"
-      },
-      "content": "Presenters: First LOD Representative"
-    },
-    {
-      "objectId": 7,
       "objectType": "table",
       "objectRole": "table",
       "x": 21,
@@ -115,21 +14,21 @@
       "width": 914,
       "styles": {
         "border": {
-          "width": 1,
-          "color": "rgb(130,130,130)"
+          "width": 0.5,
+          "color": "rgb(185, 185, 185)"
         },
         "header": {
           "backgroundColor": "rgb(15,22,50)",
-          "fontFamily": "Citi Sans Body",
-          "fontSize": "8pt",
-          "fontWeight": "bold",
+          "fontFamily": "Citi Sans Text (Body)",
+          "fontSize": "10pt",
+          "isBold": true,
           "color": "rgb(255,255,255)",
           "textAlign": "center"
         },
         "body": {
-          "fontFamily": "Citi Sans Body",
+          "fontFamily": "Citi Sans Text (Body)",
           "fontSize": "8pt",
-          "fontWeight": "normal",
+          "isBold": false,
           "color": "rgb(0,0,0)",
           "textAlign": "left"
         }
@@ -143,11 +42,10 @@
         "Client Impact",
         "Risk Category",
         "Contacts"
-      ],
-      "content": []
+      ]
     },
     {
-      "objectId": 8,
+      "objectId": 2,
       "objectType": "table",
       "objectRole": "table",
       "x": 21,
@@ -156,88 +54,88 @@
       "width": 914,
       "styles": {
         "border": {
-          "width": 1,
-          "color": "rgb(130,130,130)"
+          "width": 0.5,
+          "color": "rgb(185, 185, 185)"
         },
         "header": {
           "backgroundColor": "rgb(41,60,136)",
-          "fontFamily": "Citi Sans Body",
-          "fontSize": "12pt",
-          "fontWeight": "bold",
+          "fontFamily": "Citi Sans Text (Body)",
+          "fontSize": "10pt",
+          "isBold": true,
           "color": "rgb(255,255,255)",
           "textAlign": "left"
         },
         "body": {
-          "fontFamily": "Citi Sans Body",
+          "fontFamily": "Citi Sans Text (Body)",
           "fontSize": "10pt",
           "color": "rgb(0,0,0)",
           "textAlign": "left"
         }
       },
-      "headers": ["Event Description", "Root Cause"],
-      "content": []
+      "headers": ["Event Description", "Root Cause"]
     },
     {
-      "objectId": 9,
+      "objectId": 3,
       "objectType": "table",
       "objectRole": "table",
       "x": 21,
       "y": 328,
-      "height": 155,
-      "width": 914,
-      "styles": {
-        "border": {
-          "width": 1,
-          "color": "rgb(130,130,130)"
-        },
-        "header": {
-          "backgroundColor": "rgb(41,60,136)",
-          "fontFamily": "Citi Sans Body",
-          "fontSize": "12pt",
-          "fontWeight": "bold",
-          "color": "rgb(255,255,255)",
-          "textAlign": "left"
-        },
-        "body": {
-          "fontFamily": "Citi Sans Body",
-          "fontSize": "10pt",
-          "color": "rgb(0,0,0)",
-          "textAlign": "left"
-        }
-      },
-      "headers": ["Compensating Controls", "Next Steps and Remediation"],
-      "content": []
-    },
-    {
-      "objectId": 12,
-      "objectType": "table",
-      "objectRole": "table",
-      "x": 21,
-      "y": 570,
-      "height": 72,
+      "height": 145,
       "width": 914,
       "styles": {
         "border": {
           "width": 0.5,
-          "color": "rgb(130,130,130)"
+          "color": "rgb(185, 185, 185)"
         },
         "header": {
           "backgroundColor": "rgb(41,60,136)",
-          "fontFamily": "Citi Sans Body",
-          "fontSize": "12pt",
-          "fontWeight": "bold",
+          "fontFamily": "Citi Sans Text (Body)",
+          "fontSize": "10pt",
+          "isBold": true,
           "color": "rgb(255,255,255)",
           "textAlign": "left"
         },
         "body": {
-          "fontFamily": "Citi Sans Body",
+          "fontFamily": "Citi Sans Text (Body)",
           "fontSize": "10pt",
           "color": "rgb(0,0,0)",
           "textAlign": "left"
         }
       },
-      "headers": ["Is Further Escalation Required?"],
-      "content": []
+      "headers": ["Compensating Controls", "Next Steps and Remediation"]
+    },
+    {
+      "objectId": 14,
+      "objectType": "table",
+      "objectRole": "table",
+      "x": 21,
+      "y": 473,
+      "height": 10,
+      "width": 914,
+      "styles": {
+        "border": {
+          "width": 0.5,
+          "color": "rgb(185, 185, 185)"
+        },
+        "header": {
+          "backgroundColor": "rgb(41,60,136)",
+          "fontFamily": "Citi Sans Text (Body)",
+          "fontSize": "10pt",
+          "isBold": true,
+          "color": "rgb(255,255,255)",
+          "textAlign": "left"
+        },
+        "body": {
+          "fontFamily": "Citi Sans Text (Body)",
+          "fontSize": "10pt",
+          "color": "rgb(0,0,0)",
+          "textAlign": "left"
+        }
+      },
+      "headers": [
+        "Is Further Escalation Required?",
+        "For Mandatory or judgemental escalations, note the senior committee and/or Board name"
+      ]
     }
   ]
 }

@@ -1,0 +1,28 @@
+{
+  "slideId": 1,
+  "slideTitle": "L1 and L2 Issues Summary All LOD Sources",
+  "legalEntity": ["Citigroup", "Citibank NA"],
+  "presenter": [
+    {
+      "userSoeld": "st13286",
+      "userFirstName": "Sirisha",
+      "userLastName": "Thakur",
+      "userMailld": "st13286@citi.com"
+    },
+    {
+      "userSoeld": "rk11111",
+      "userFirstName": "Rishikesh",
+      "userLastName": "Kumar",
+      "userMailld": "rk11111@citi.com"
+    }
+  ],
+  "lineOfDefence": [1, 1],
+  "IsCal": "Y",
+  "dataTopicid": 1,
+  "stdTemplateld": null,
+  "IsUploaded": "N",
+  "stdSlideContent": {
+    "table 1": ["cell1 content", "cell2 content", "cell3 content"],
+    "table 2": ["cell1 content", "cell2 content"]
+  }
+}

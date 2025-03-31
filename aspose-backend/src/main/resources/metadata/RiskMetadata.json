@@ -1,5 +1,5 @@
 {
-  "stdTemplateId": 101,
+  "stdTemplateId": 102,
   "isCSI": true,
   "height": 540,
   "width": 960,
@@ -34,12 +34,10 @@
         }
       },
       "headers": [
-        "Risk-Based Audit Report Name",
-        "Report Date",
-        "Audit Report Rating",
-        "Business / Function",
-        "Accountable Executive",
-        "Responsible Chief Auditor"
+        "Risk Category",
+        "Legal Entity Impact",
+        "Client Impact",
+        "Contact"
       ]
     },
     {
@@ -70,7 +68,7 @@
           "textAlign": "left"
         }
       },
-      "headers": ["Scope of Audit Review", "Drivers of Audit Rating"]
+      "headers": ["Risk Description", "Key concerns and Impact"]
     },
     {
       "objectId": 3,
@@ -100,10 +98,7 @@
           "textAlign": "left"
         }
       },
-      "headers": [
-        "Remediation Approach and Timeline",
-        "Key Dependencies or Constraints with Remediation Plan"
-      ]
+      "headers": ["Interim Measures for Risk Management", "Next steps"]
     }
   ]
 }
