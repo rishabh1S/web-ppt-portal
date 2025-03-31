@@ -18,6 +18,8 @@
   ],
   "lineOfDefence": [1, 1],
   "IsCal": "Y",
+  "isCSI": "Y",
+  "footer": "<span>This is a test footer</span>",
   "dataTopicid": 1,
   "stdTemplateld": null,
   "IsUploaded": "N",

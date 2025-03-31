@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TemplateTableContent extends TemplateContent {
+    private String tableId;
     @JsonProperty("headers")
     private List<String> headers;
 

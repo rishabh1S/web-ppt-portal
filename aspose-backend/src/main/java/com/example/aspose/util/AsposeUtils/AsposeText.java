@@ -13,8 +13,7 @@ public class AsposeText {
                 int y = textContent.getY();
                 int width = textContent.getWidth();
                 int height = textContent.getHeight();
-                String content = textContent.getContent();
-
+                String content = textContent.getContent() != null ? textContent.getContent() : "";
                 // Create text shape
                 IAutoShape textShape = slide.getShapes().addAutoShape(
                                 ShapeType.Rectangle, x, y, width, height);
