@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +85,9 @@ public class TemplateService {
 
         private void addSlideContent(ISlide slide, TemplateMetadata metadata, SlideContent slideContent)
                         throws Exception {
-                Map<String, List<String>> stdSlideContent = slideContent.getStdSlideContent();
+                Map<String, List<String>> stdSlideContent = (slideContent.getStdSlideContent() != null)
+                                ? slideContent.getStdSlideContent()
+                                : Collections.emptyMap();
                 for (TemplateContent contentObj : metadata.getStdTemplateContent()) {
                         switch (contentObj.getObjectType()) {
                                 case "text":
@@ -92,35 +95,31 @@ public class TemplateService {
                                         break;
                                 case "table":
                                         TemplateTableContent tableContent = (TemplateTableContent) contentObj;
-                                        int objectId = tableContent.getObjectId();
-                                        String tableId = "table " + objectId;
+                                        String tableId = "table " + tableContent.getObjectId();
 
-                                        if (stdSlideContent != null && stdSlideContent.containsKey(tableId)) {
-                                                List<String> cellContents = stdSlideContent.get(tableId);
+                                        List<String> cellContents = stdSlideContent.getOrDefault(tableId,
+                                                        Collections.emptyList());
 
-                                                List<List<String>> formattedContent = new ArrayList<>();
+                                        List<List<String>> formattedContent = new ArrayList<>();
+                                        List<String> headers = tableContent.getHeaders();
+                                        int colCount = (headers != null) ? headers.size() : 0;
 
-                                                int colCount = tableContent.getHeaders().size();
-
+                                        if (colCount > 0 && !cellContents.isEmpty()) {
                                                 int totalCells = cellContents.size();
-                                                int rowCount = (int) Math.ceil((double) totalCells / colCount);
+                                                int rowCount = (totalCells + colCount - 1) / colCount;
 
                                                 for (int row = 0; row < rowCount; row++) {
-                                                        List<String> rowContent = new ArrayList<>();
+                                                        List<String> rowContent = new ArrayList<>(colCount);
                                                         for (int col = 0; col < colCount; col++) {
                                                                 int cellIndex = row * colCount + col;
-                                                                if (cellIndex < totalCells) {
-                                                                        rowContent.add(cellContents.get(cellIndex));
-                                                                } else {
-                                                                        rowContent.add("");
-
-                                                                }
+                                                                rowContent.add((cellIndex < totalCells)
+                                                                                ? cellContents.get(cellIndex)
+                                                                                : "");
                                                         }
                                                         formattedContent.add(rowContent);
                                                 }
-                                                tableContent.setContent(formattedContent);
                                         }
-
+                                        tableContent.setContent(formattedContent);
                                         AsposeTable.addTableShape(slide, tableContent);
                                         break;
                                 default:
